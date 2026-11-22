@@ -8,7 +8,8 @@
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
-    "start": "node --env-file-if-exists=.env serve.js"
+    "start": "node --env-file-if-exists=.env serve.js",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.5",
