@@ -26,4 +26,7 @@ COPY serve.js ./
 
 EXPOSE 3000
 
+HEALTHCHECK --interval=10s --timeout=5s --start-period=10s --retries=3 \
+  CMD ["node", "-e", "fetch(`http://localhost:${process.env.PORT}/`).then((response) => process.exit(response.ok ? 0 : 1), () => process.exit(1))"]
+
 CMD ["node", "serve.js"]

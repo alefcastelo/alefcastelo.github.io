@@ -24,6 +24,8 @@ Click **Deploy**. When the deployment finishes, open the application's **Logs** 
 ➜ Listening on: http://localhost:3000/ (all interfaces)
 ```
 
+Then check the site before the DNS points to it. In the application's **Domains** tab, click **Add Domain**, click the dice button next to **Host** ("Generate sslip.io domain"), set **Container Port** `3000`, leave **HTTPS** off and click **Create**. If Dokploy warns that you need to set an IP address, set it in **Web Server → Server → Update Server IP** and generate the domain again. Open `http://<generated-host>` and check that the home page, a post and `/me.jpg` load, and that an unknown URL such as `/nope` shows "Page not found" with status 404. Keep this domain until step 5.
+
 ## 4. Point the DNS to the VPS
 
 In hPanel, open the DNS zone of `alefcastelo.com` and:
@@ -34,13 +36,27 @@ In hPanel, open the DNS zone of `alefcastelo.com` and:
 
 ## 5. Add the domains
 
-1. In the application's **Domains** tab, add `alefcastelo.com` and `www.alefcastelo.com`, each with **Container Port** `3000`, **HTTPS** on and the **Let's Encrypt** certificate provider.
-2. In **Advanced → Redirects**, add the **Redirect to non-www** preset, so `www.alefcastelo.com` redirects to `alefcastelo.com`.
-3. Wait for Let's Encrypt to issue the certificates. Then check that `https://alefcastelo.com` loads with a valid certificate, and that `http://alefcastelo.com` and `https://www.alefcastelo.com` redirect to it.
+1. Define a compression middleware for the HTML pages: in the panel's **Traefik File System**, open `dynamic/middlewares.yml`, click **Unlock**, add a `compress` entry under `http.middlewares`, keeping the entries already there (such as `redirect-to-https`), and click **Update**:
+
+   ```yaml
+   http:
+     middlewares:
+       compress:
+         compress: {}
+   ```
+
+2. In the application's **Domains** tab, add `alefcastelo.com` and `www.alefcastelo.com`, each with **Container Port** `3000`, **HTTPS** on, the **Let's Encrypt** certificate provider and, in **Middlewares**, `compress@file` (type it and click **Add**).
+3. In **Advanced → Redirects**, add the **Redirect to non-www** preset, so `www.alefcastelo.com` redirects to `alefcastelo.com`.
+4. Wait for Let's Encrypt to issue the certificates. Then check that `https://alefcastelo.com` loads with a valid certificate, that `http://alefcastelo.com` and `https://www.alefcastelo.com` redirect to it, and that `curl -sI -H 'Accept-Encoding: gzip' https://alefcastelo.com/` shows `content-encoding: gzip`.
+5. Delete the sslip.io domain added in step 3.
 
 ## 6. Turn off GitHub Pages
 
-Only once `https://alefcastelo.com` is served by the VPS: in the GitHub repository, go to **Settings → Pages**, open the **⋯** menu next to "Your site is live at" and choose **Unpublish site**.
+Only once `https://alefcastelo.com` is served by the VPS: in the GitHub repository, go to **Settings → Pages**, open the **⋯** menu next to "Your site is live at" and choose **Unpublish site**. Then point the repository's Website to the new domain:
+
+```
+gh repo edit alefcastelo/alefcastelo.github.io --homepage https://alefcastelo.com
+```
 
 ## Before merging this PR, add to the Dokploy Environment
 

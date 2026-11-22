@@ -23,7 +23,7 @@ export const Route = createRootRoute({
 
 function RootShell({ children }: { children: ReactNode }) {
   const isHome = useRouterState({
-    select: (state) => state.location.pathname === '/',
+    select: (state) => state.matches.some((match) => match.routeId === '/'),
   })
   return (
     <html lang="en">
