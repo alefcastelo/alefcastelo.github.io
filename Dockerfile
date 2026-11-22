@@ -4,7 +4,10 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm ci
+# better-sqlite3 ships prebuilt binaries for Alpine, but npm ci reads its metadata
+# from the lockfile, misses its "gypfile": false and runs node-gyp, which needs a
+# compiler toolchain. No other dependency needs an install script to run.
+RUN npm ci --ignore-scripts
 
 COPY . .
 
@@ -16,13 +19,18 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 ENV PORT=3000
+ENV DATABASE_PATH=/data/blog.db
 
 COPY package*.json ./
 
-RUN npm ci --omit=dev
+RUN npm ci --omit=dev --ignore-scripts
 
 COPY --from=build /app/dist ./dist
+COPY drizzle ./drizzle
+COPY scripts ./scripts
 COPY serve.js ./
+
+VOLUME /data
 
 EXPOSE 3000
 
