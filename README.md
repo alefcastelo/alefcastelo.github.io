@@ -21,7 +21,14 @@ npm install
 cp .env.example .env
 ```
 
-In `.env`, set `DATABASE_PATH=./data/blog.db`. Then:
+In `.env`, set `BASE_URL=http://localhost:3000` and `DATABASE_PATH=./data/blog.db`, any `ADMIN_EMAILS`, and a `BETTER_AUTH_SECRET` from `openssl rand -base64 32`.
+
+Signing in needs development OAuth apps, separate from the production ones, that send readers back to localhost:
+
+- GitHub: in **Settings → Developer settings → OAuth Apps**, a new app with **Homepage URL** `http://localhost:3000` and **Authorization callback URL** `http://localhost:3000/api/auth/callback/github`. Put its client ID and secret in `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET`.
+- Google: in the Google Cloud Console, under **Google Auth Platform → Clients**, a **Web application** client with **Authorized JavaScript origins** `http://localhost:3000` and **Authorized redirect URIs** `http://localhost:3000/api/auth/callback/google`. Put its client ID and secret in `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`. While the app is in Testing mode, add your Google account to its test users in **Audience**.
+
+Then:
 
 ```sh
 npm run dev

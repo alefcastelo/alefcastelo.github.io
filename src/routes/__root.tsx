@@ -1,14 +1,20 @@
-import type { ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import {
   HeadContent,
   Link,
   Scripts,
   createRootRoute,
+  useRouter,
   useRouterState,
 } from '@tanstack/react-router'
+import { authClient } from '#/auth-client'
+import { Avatar } from '#/Avatar'
+import { deleteAccount } from '#/server/account'
+import { getViewer, type Viewer } from '#/server/viewer'
 import appCss from '#/styles.css?url'
 
 export const Route = createRootRoute({
+  beforeLoad: async () => ({ viewer: await getViewer() }),
   head: () => ({
     meta: [
       { charSet: 'utf-8' },
@@ -25,13 +31,19 @@ function RootShell({ children }: { children: ReactNode }) {
   const isHome = useRouterState({
     select: (state) => state.matches.some((match) => match.routeId === '/'),
   })
+  const viewer = Route.useRouteContext({ select: (context) => context.viewer })
   return (
     <html lang="en">
       <head>
         <HeadContent />
       </head>
       <body>
-        <div className="mx-auto max-w-[680px] px-4 py-8 sm:py-12">
+        <div className="relative mx-auto max-w-[680px] px-4 py-8 sm:py-12">
+          {viewer && (
+            <div className="absolute top-8 right-4 sm:top-12">
+              <UserMenu viewer={viewer} />
+            </div>
+          )}
           {isHome ? <Bio /> : <SiteHeader />}
           {children}
         </div>
@@ -99,6 +111,83 @@ function SiteHeader() {
         Alef Castelo
       </Link>
     </header>
+  )
+}
+
+const DELETE_ACCOUNT_WARNING =
+  'This deletes your account and reactions. Comments with replies stay as [deleted].'
+
+function UserMenu({ viewer }: { viewer: Viewer }) {
+  const router = useRouter()
+  const [open, setOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!open) return
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      if (!menuRef.current?.contains(event.target as Node)) setOpen(false)
+    }
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('pointerdown', closeOnOutsideClick)
+    document.addEventListener('keydown', closeOnEscape)
+    return () => {
+      document.removeEventListener('pointerdown', closeOnOutsideClick)
+      document.removeEventListener('keydown', closeOnEscape)
+    }
+  }, [open])
+
+  async function signOut() {
+    await authClient.signOut()
+    setOpen(false)
+    await router.invalidate()
+  }
+
+  async function removeAccount() {
+    if (!window.confirm(DELETE_ACCOUNT_WARNING)) return
+    await deleteAccount()
+    setOpen(false)
+    await router.invalidate()
+  }
+
+  return (
+    <div ref={menuRef} className="relative">
+      <button
+        type="button"
+        aria-label={`Account menu for ${viewer.name}`}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen(!open)}
+        className="rounded-full"
+      >
+        <Avatar name={viewer.name} image={viewer.image} size={36} />
+      </button>
+      {open && (
+        <div
+          role="menu"
+          className="absolute right-0 z-10 mt-2 min-w-40 rounded-md border border-muted/25 bg-bg py-1 shadow-lg"
+        >
+          <p className="truncate px-4 py-2 text-sm text-muted">{viewer.name}</p>
+          <button
+            type="button"
+            role="menuitem"
+            onClick={signOut}
+            className="block w-full px-4 py-2 text-left hover:bg-muted/10"
+          >
+            Sign out
+          </button>
+          <button
+            type="button"
+            role="menuitem"
+            onClick={removeAccount}
+            className="block w-full px-4 py-2 text-left text-red-600 hover:bg-muted/10 dark:text-red-400"
+          >
+            Delete account
+          </button>
+        </div>
+      )}
+    </div>
   )
 }
 

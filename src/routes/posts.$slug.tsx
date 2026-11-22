@@ -1,19 +1,27 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
+import { CommentsSection } from '#/comments/CommentsSection'
 import { formatDate } from '#/format-date'
 import { SubscribeForm } from '#/newsletter/SubscribeForm'
+import { getCommentMaxLength, listComments } from '#/server/comments'
 import { fetchPost } from '#/server/posts'
 
 export const Route = createFileRoute('/posts/$slug')({
+  validateSearch: (search: Record<string, unknown>): { error?: string } =>
+    typeof search.error === 'string' ? { error: search.error } : {},
   loader: async ({ params }) => {
-    const post = await fetchPost({ data: params.slug })
+    const [post, comments, commentMaxLength] = await Promise.all([
+      fetchPost({ data: params.slug }),
+      listComments({ data: params.slug }),
+      getCommentMaxLength(),
+    ])
     if (post === null) throw notFound()
-    return post
+    return { post, comments, commentMaxLength }
   },
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.title} — Alef Castelo` },
-          { name: 'description', content: loaderData.description },
+          { title: `${loaderData.post.title} — Alef Castelo` },
+          { name: 'description', content: loaderData.post.description },
         ]
       : [],
   }),
@@ -21,7 +29,9 @@ export const Route = createFileRoute('/posts/$slug')({
 })
 
 function PostPage() {
-  const post = Route.useLoaderData()
+  const { post, comments, commentMaxLength } = Route.useLoaderData()
+  const { viewer } = Route.useRouteContext()
+  const { error } = Route.useSearch()
   return (
     <article>
       <time dateTime={post.date} className="text-sm text-muted">
@@ -31,6 +41,15 @@ function PostPage() {
         {post.title}
       </h1>
       <div className="prose mt-10" dangerouslySetInnerHTML={{ __html: post.html }} />
+      <div className="mt-16">
+        <CommentsSection
+          slug={post.slug}
+          comments={comments}
+          maxLength={commentMaxLength}
+          viewer={viewer}
+          signInError={error}
+        />
+      </div>
       <div className="mt-16">
         <SubscribeForm />
       </div>
