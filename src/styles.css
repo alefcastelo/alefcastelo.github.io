@@ -60,6 +60,12 @@ body {
   font-weight: 600;
 }
 
+.prose img {
+  width: 100%;
+  height: auto;
+  border-radius: 4px;
+}
+
 .prose code {
   font-size: 0.85em;
 }

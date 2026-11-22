@@ -6,6 +6,7 @@ export type PostSummary = {
   title: string
   description: string
   date: string
+  thumbnail: string | null
 }
 
 export type Post = PostSummary & { html: string }
@@ -42,9 +43,16 @@ export function formatDate(date: string): string {
 function postFromMarkdown(path: string, raw: string): Post {
   const slug = FILE_NAME.exec(path)?.[1]
   const { meta, body } = parseFrontmatter(raw)
-  const { title, description, date } = meta
+  const { title, description, date, thumbnail = null } = meta
   if (!slug || !title || !description || !date) {
     throw new Error(`${path}: frontmatter needs title, description and date`)
   }
-  return { slug, title, description, date, html: marked.parse(body, { async: false }) }
+  return {
+    slug,
+    title,
+    description,
+    date,
+    thumbnail,
+    html: marked.parse(body, { async: false }),
+  }
 }
