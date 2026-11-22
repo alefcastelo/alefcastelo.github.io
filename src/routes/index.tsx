@@ -1,8 +1,9 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { formatDate, listPosts } from '#/posts'
+import { formatDate } from '#/format-date'
+import { fetchPosts } from '#/server/posts'
 
 export const Route = createFileRoute('/')({
-  loader: () => listPosts(),
+  loader: () => fetchPosts(),
   component: Home,
 })
 
@@ -20,7 +21,7 @@ function Home() {
             >
               <div className="min-w-0 flex-1">
                 <time dateTime={post.date} className="text-sm text-muted">
-                  {formatDate(post.date)}
+                  {formatDate(new Date(post.date))}
                 </time>
                 <h2 className="mt-1 text-xl font-semibold tracking-tight text-balance group-hover:underline group-hover:underline-offset-4">
                   {post.title}
