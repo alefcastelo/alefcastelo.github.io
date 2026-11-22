@@ -4,7 +4,8 @@ import type { RateLimiter } from '#/server/rate-limit'
 
 export type SubscribeResult = 'subscribed' | 'invalid_email' | 'rate_limited'
 
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const MAX_EMAIL_LENGTH = 254
+const EMAIL = /^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/
 
 export function subscribeEmail(
   db: Db,
@@ -12,7 +13,7 @@ export function subscribeEmail(
   { email, ip }: { email: string; ip: string },
 ): SubscribeResult {
   const normalized = email.trim().toLowerCase()
-  if (!EMAIL.test(normalized)) return 'invalid_email'
+  if (normalized.length > MAX_EMAIL_LENGTH || !EMAIL.test(normalized)) return 'invalid_email'
   if (!limiter.attempt(ip)) return 'rate_limited'
   db.insert(newsletterSubscribers)
     .values({ email: normalized, createdAt: new Date() })

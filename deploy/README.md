@@ -28,8 +28,8 @@ In the application's **Environment** tab, add the variables from [`.env.example`
 3. In the application's **Volume Backups** tab, create a backup:
    - **Volume Name**: `blog-data`;
    - **Destination**: the bucket from item 2;
-   - **Schedule**: `0 4 * * *` (every day at 04:00);
-   - **Turn off Container**: on. Dokploy stops the container while it copies the volume and starts it again afterwards, so the SQLite file and its WAL are copied with no write in the middle. The site is down for a few seconds every day at 04:00;
+   - **Schedule**: `0 10 * * *` (every day at 10:00 UTC, 04:00 in Mexico City: Dokploy schedules volume backups in UTC);
+   - **Turn off Container**: on. Dokploy stops the container while it copies the volume and starts it again afterwards, so the SQLite file and its WAL are copied with no write in the middle. The site is down for a few seconds every day at 10:00 UTC, 04:00 in Mexico City;
    - **Enabled**: on.
 
 A write made after the last backup is lost if the VPS disk is lost: at most one day of comments and subscriptions.
@@ -79,8 +79,15 @@ gh repo edit alefcastelo/alefcastelo.github.io --homepage https://alefcastelo.co
 ## Restore a backup
 
 1. In the application, click **Stop**.
-2. In the **Volume Backups** tab, open the restore option, choose the S3 destination and the backup file, and restore it into the `blog-data` volume.
-3. Click **Deploy** (or **Start**) and check the **Logs** for `Listening on`. The newsletter e-mails from the backup are back.
+2. Stop only scales the service to zero and leaves its exited containers, and Dokploy aborts the restore while any container, stopped ones included, references the volume. On the VPS, list them:
+
+   ```
+   docker ps -a --filter volume=blog-data
+   ```
+
+   and remove every container it lists with `docker rm <id>`.
+3. In the **Volume Backups** tab, open the restore option, choose the S3 destination and the backup file, and restore it into the `blog-data` volume. A restore log ending in "volume is in use" means step 2 was skipped.
+4. Click **Deploy** (or **Start**) and check the **Logs** for `Listening on`. The newsletter e-mails from the backup are back.
 
 ## Before merging this PR, set up in Dokploy
 

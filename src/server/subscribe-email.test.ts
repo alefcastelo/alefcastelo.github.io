@@ -40,6 +40,26 @@ describe('subscribeEmail', () => {
     expect(emails()).toEqual(['reader@example.com'])
   })
 
+  it('refuses an email over 254 characters without storing it', () => {
+    const { db, limiter, emails } = setup({ limit: 1 })
+    const email = `${'a'.repeat(243)}@example.com`
+    expect(email).toHaveLength(255)
+    expect(subscribeEmail(db, limiter, { email, ip: '1.1.1.1' })).toBe('invalid_email')
+    expect(subscribeEmail(db, limiter, { email: 'reader@example.com', ip: '1.1.1.1' })).toBe(
+      'subscribed',
+    )
+    expect(emails()).toEqual(['reader@example.com'])
+  })
+
+  it('refuses an email crafted to backtrack quickly', () => {
+    const { db, limiter, emails } = setup()
+    const email = `a@${'.'.repeat(80_000)}@`
+    const start = performance.now()
+    expect(subscribeEmail(db, limiter, { email, ip: '1.1.1.1' })).toBe('invalid_email')
+    expect(performance.now() - start).toBeLessThan(50)
+    expect(emails()).toEqual([])
+  })
+
   it('refuses an IP over the limit, counting a repeated email too', () => {
     const { db, limiter, emails } = setup({ limit: 2 })
     subscribeEmail(db, limiter, { email: 'reader@example.com', ip: '1.1.1.1' })

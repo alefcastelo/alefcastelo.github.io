@@ -1,4 +1,5 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useState, type FormEvent } from 'react'
+import { useHydrated } from '@tanstack/react-router'
 import { subscribe } from '#/server/newsletter'
 import type { SubscribeResult } from '#/server/subscribe-email'
 
@@ -10,20 +11,22 @@ const MESSAGES: Record<SubscribeResult, string> = {
 
 export function SubscribeForm() {
   const [pending, setPending] = useState(false)
-  const [result, setResult] = useState<SubscribeResult | null>(null)
+  const [message, setMessage] = useState('')
   // Until React hydrates, a click would submit the form natively and put the email in the URL.
-  const [hydrated, setHydrated] = useState(false)
-  useEffect(() => setHydrated(true), [])
+  const hydrated = useHydrated()
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const form = event.currentTarget
     const email = String(new FormData(form).get('email') ?? '')
     setPending(true)
+    setMessage('')
     try {
       const outcome = await subscribe({ data: { email } })
-      setResult(outcome)
+      setMessage(MESSAGES[outcome])
       if (outcome === 'subscribed') form.reset()
+    } catch {
+      setMessage('Something went wrong, try again')
     } finally {
       setPending(false)
     }
@@ -50,7 +53,7 @@ export function SubscribeForm() {
         </button>
       </form>
       <p role="status" className="mt-2 min-h-6 text-sm text-muted">
-        {result && MESSAGES[result]}
+        {message}
       </p>
     </section>
   )
