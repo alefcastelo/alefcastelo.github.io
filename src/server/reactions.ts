@@ -1,14 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
-import { getRequestHeaders } from '@tanstack/react-start/server'
-import { auth } from '#/server/auth'
-import { config } from '#/server/config'
 import { db } from '#/server/db/client'
 import { listPostReactions, togglePostReaction } from '#/server/reaction-store'
-import { findViewer } from '#/server/viewer'
-
-const currentViewer = () => findViewer(auth, getRequestHeaders(), config.adminEmails)
-
-const text = (value: unknown) => (typeof value === 'string' ? value : '')
+import { currentViewer, text } from '#/server/request'
 
 export const listReactions = createServerFn({ method: 'GET' })
   .validator((slug: string) => text(slug))

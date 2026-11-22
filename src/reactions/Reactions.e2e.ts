@@ -58,3 +58,29 @@ test('a signed-out reader sees the counts, and a click asks to sign in with a li
   await expect(page).toHaveURL(/#comments$/)
   await expect(page.locator('#comments').getByRole('button', { name: 'Sign in with GitHub' })).toBeInViewport()
 })
+
+test('a reader whose session ended after the page loaded is asked to sign in on click', async ({ page, context }) => {
+  await signInAsNewReader(context, 'Expired Reader')
+  await openFirstPost(page)
+  await waitForHydration(page)
+  await context.clearCookies()
+
+  await reaction(page, '👀').click()
+  await expect(page.getByRole('link', { name: 'Sign in to react' })).toHaveAttribute('href', '#comments')
+})
+
+test('a failed request says the reaction was not saved, until the next attempt', async ({ page, context }) => {
+  await signInAsNewReader(context, 'Offline Reader')
+  await openFirstPost(page)
+  await waitForHydration(page)
+  const alert = reactionBar(page).locator('..').getByRole('alert')
+
+  await page.route('**/_serverFn/**', (route) => route.abort())
+  await reaction(page, '🤔').click()
+  await expect(alert).toHaveText("Couldn't save the reaction, try again")
+
+  await page.unroute('**/_serverFn/**')
+  await reaction(page, '🤔').click()
+  await expect(reaction(page, '🤔')).toHaveAttribute('aria-pressed', 'true')
+  await expect(alert).toHaveCount(0)
+})

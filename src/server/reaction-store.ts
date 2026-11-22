@@ -37,7 +37,6 @@ export function togglePostReaction(
   db: Db,
   viewer: Viewer | null,
   input: { slug: string; emoji: string },
-  now: Date = new Date(),
 ): ToggleReactionResult {
   if (!viewer) return 'unauthenticated'
   if (!isReactionEmoji(input.emoji)) return 'invalid_emoji'
@@ -50,7 +49,7 @@ export function togglePostReaction(
   return db.transaction((tx) => {
     if (tx.delete(reactions).where(key).run().changes > 0) return 'off'
     tx.insert(reactions)
-      .values({ postSlug: input.slug, userId: viewer.id, emoji: input.emoji, createdAt: now })
+      .values({ postSlug: input.slug, userId: viewer.id, emoji: input.emoji, createdAt: new Date() })
       .run()
     return 'on'
   })

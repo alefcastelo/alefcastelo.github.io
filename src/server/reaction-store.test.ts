@@ -1,24 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { listPosts } from '#/posts'
 import { REACTION_EMOJIS } from '#/reactions/emojis'
-import { reactions, user } from '#/server/db/schema'
-import { createTestDb } from '#/server/db/test-db'
+import { reactions } from '#/server/db/schema'
+import { createTestDbWithReaders as setup } from '#/server/db/test-db'
 import { listPostReactions, togglePostReaction } from '#/server/reaction-store'
 import type { Viewer } from '#/server/viewer'
 
 const SLUG = listPosts()[0].slug
-
-function setup() {
-  const db = createTestDb()
-  const reader = (name: string): Viewer => {
-    const id = crypto.randomUUID()
-    db.insert(user)
-      .values({ id, name, email: `${name}@example.com`, emailVerified: true })
-      .run()
-    return { id, name, image: null, isAdmin: false }
-  }
-  return { db, reader }
-}
 
 describe('listPostReactions', () => {
   it('lists the 5 reactions in order with a zero count when nobody reacted', () => {

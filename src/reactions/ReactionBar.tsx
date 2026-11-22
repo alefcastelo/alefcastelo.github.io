@@ -15,6 +15,7 @@ export function ReactionBar({
   const router = useRouter()
   const [askSignIn, setAskSignIn] = useState(false)
   const [pending, setPending] = useState(false)
+  const [failed, setFailed] = useState(false)
 
   async function toggle(emoji: string) {
     if (!signedIn) {
@@ -22,9 +23,13 @@ export function ReactionBar({
       return
     }
     setPending(true)
+    setFailed(false)
     try {
-      await toggleReaction({ data: { slug, emoji } })
+      const result = await toggleReaction({ data: { slug, emoji } })
+      if (result === 'unauthenticated') setAskSignIn(true)
       await router.invalidate()
+    } catch {
+      setFailed(true)
     } finally {
       setPending(false)
     }
@@ -37,7 +42,7 @@ export function ReactionBar({
           <li key={emoji}>
             <button
               type="button"
-              aria-label={`React with ${emoji}`}
+              aria-label={`React with ${emoji}, ${count}`}
               aria-pressed={reactedByViewer}
               disabled={pending}
               onClick={() => toggle(emoji)}
@@ -56,6 +61,11 @@ export function ReactionBar({
           <a href="#comments" className="underline underline-offset-4">
             Sign in to react
           </a>
+        </p>
+      )}
+      {failed && (
+        <p role="alert" className="mt-2 text-sm text-red-600 dark:text-red-400">
+          Couldn't save the reaction, try again
         </p>
       )}
     </div>
