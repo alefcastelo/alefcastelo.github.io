@@ -2,19 +2,22 @@ import { createFileRoute, notFound } from '@tanstack/react-router'
 import { CommentsSection } from '#/comments/CommentsSection'
 import { formatDate } from '#/format-date'
 import { SubscribeForm } from '#/newsletter/SubscribeForm'
+import { ReactionBar } from '#/reactions/ReactionBar'
 import { listComments } from '#/server/comments'
 import { fetchPost } from '#/server/posts'
+import { listReactions } from '#/server/reactions'
 
 export const Route = createFileRoute('/posts/$slug')({
   validateSearch: (search: Record<string, unknown>): { error?: string } =>
     typeof search.error === 'string' ? { error: search.error } : {},
   loader: async ({ params }) => {
-    const [post, { comments, commentMaxLength }] = await Promise.all([
+    const [post, { comments, commentMaxLength }, reactions] = await Promise.all([
       fetchPost({ data: params.slug }),
       listComments({ data: params.slug }),
+      listReactions({ data: params.slug }),
     ])
     if (post === null) throw notFound()
-    return { post, comments, commentMaxLength }
+    return { post, comments, reactions, commentMaxLength }
   },
   head: ({ loaderData }) => ({
     meta: loaderData
@@ -28,7 +31,7 @@ export const Route = createFileRoute('/posts/$slug')({
 })
 
 function PostPage() {
-  const { post, comments, commentMaxLength } = Route.useLoaderData()
+  const { post, comments, reactions, commentMaxLength } = Route.useLoaderData()
   const { viewer } = Route.useRouteContext()
   const { error } = Route.useSearch()
   return (
@@ -40,6 +43,9 @@ function PostPage() {
         {post.title}
       </h1>
       <div className="prose mt-10" dangerouslySetInnerHTML={{ __html: post.html }} />
+      <div className="mt-12">
+        <ReactionBar slug={post.slug} reactions={reactions} signedIn={viewer !== null} />
+      </div>
       <div className="mt-16">
         <CommentsSection
           slug={post.slug}

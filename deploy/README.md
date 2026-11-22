@@ -112,5 +112,4 @@ gh repo edit alefcastelo/alefcastelo.github.io --homepage https://alefcastelo.co
 
 ## Before merging this PR, set up in Dokploy
 
-- Create the OAuth apps (step 4), with Google's app published.
-- Add to the Environment (step 3): `BASE_URL`, `ADMIN_EMAILS`, `BETTER_AUTH_SECRET`, `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`, `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`. Without them the new version does not start.
+Nothing to set up.
