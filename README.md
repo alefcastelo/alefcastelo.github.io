@@ -23,9 +23,4 @@ Open http://localhost:3000.
 
 ## Publish
 
-Pushing to `master` only runs CI. Production updates when a release tag is pushed:
-
-```sh
-git tag v0.1.0
-git push origin v0.1.0
-```
+Every push to `master` is deployed by Dokploy, which builds the `Dockerfile` on the VPS. The server setup is in [deploy/README.md](deploy/README.md).
