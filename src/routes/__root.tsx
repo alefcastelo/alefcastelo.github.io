@@ -102,7 +102,7 @@ function SiteHeader() {
   )
 }
 
-export function NotFound() {
+function NotFound() {
   return (
     <main>
       <h1 className="text-3xl font-semibold tracking-tight">Page not found</h1>
