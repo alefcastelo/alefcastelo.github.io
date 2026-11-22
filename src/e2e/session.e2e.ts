@@ -1,5 +1,6 @@
 import { expect, test } from '@playwright/test'
 import { READERS } from './env'
+import { signInAs } from './sessions'
 
 const DAY_SECONDS = 24 * 60 * 60
 
@@ -15,9 +16,9 @@ test.describe('with the recent session', () => {
 })
 
 test.describe('with the session due for renewal', () => {
-  test.use({ storageState: READERS.stale.storageState })
-
+  // Each attempt gets its own session renewed two days ago: a retry can't reuse one the first attempt renewed.
   test('loading a page extends the session cookie to 30 days from now', async ({ page, context }) => {
+    await signInAs(context, 'stale', 2)
     await page.goto('/')
     await expect(
       page.getByRole('button', { name: `Account menu for ${READERS.stale.name}` }),

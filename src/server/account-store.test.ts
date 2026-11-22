@@ -4,33 +4,17 @@ import { deleteUserAccount } from '#/server/account-store'
 import { createPostComment, deletePostComment } from '#/server/comment-store'
 import type { Db } from '#/server/db/client'
 import { account, comments, session, user } from '#/server/db/schema'
-import { createTestDb } from '#/server/db/test-db'
+import { commentIdOf as idOf, createTestDbWithReaders as setup } from '#/server/db/test-db'
 import type { Viewer } from '#/server/viewer'
 
 const SLUG = listPosts()[0].slug
 const LIMITS = { maxLength: 280, ratePerMinute: 100 }
-
-function setup() {
-  const db = createTestDb()
-  const reader = (name: string): Viewer => {
-    const id = crypto.randomUUID()
-    db.insert(user)
-      .values({ id, name, email: `${name}@example.com`, emailVerified: true })
-      .run()
-    return { id, name, image: null, isAdmin: false }
-  }
-  return { db, reader }
-}
 
 let clock = Date.UTC(2026, 10, 22)
 function create(db: Db, viewer: Viewer, body: string, parent?: string) {
   clock += 1000
   const parentId = parent === undefined ? undefined : idOf(db, parent)
   expect(createPostComment(db, viewer, LIMITS, { slug: SLUG, body, parentId }, new Date(clock))).toBe('created')
-}
-
-function idOf(db: Db, body: string) {
-  return db.select().from(comments).all().find((row) => row.body === body)!.id
 }
 
 /** Every comment left, as `body by author` with replies indented. */

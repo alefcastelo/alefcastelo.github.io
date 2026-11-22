@@ -171,6 +171,7 @@ export function deletePostComment(db: Db, viewer: Viewer | null, id: string): De
 function checkBody(body: string, maxLength: number): BodyError | null {
   if ([...body].length > maxLength) return 'too_long'
   const text = renderCommentMarkdown(body).replace(/<[^>]*>/g, '')
-  if (text.trim() === '') return 'empty'
+  // \s misses the invisible format characters (\p{Cf}), such as the zero-width space.
+  if (text.replace(/[\s\p{Cf}]/gu, '') === '') return 'empty'
   return null
 }

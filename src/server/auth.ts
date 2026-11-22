@@ -13,12 +13,20 @@ export function createAuth(db: Db) {
     baseURL: config.baseUrl,
     secret: config.betterAuthSecret,
     socialProviders: {
-      github: { clientId: config.githubClientId, clientSecret: config.githubClientSecret },
-      google: { clientId: config.googleClientId, clientSecret: config.googleClientSecret },
+      github: {
+        clientId: config.githubClientId,
+        clientSecret: config.githubClientSecret,
+        overrideUserInfoOnSignIn: true,
+      },
+      google: {
+        clientId: config.googleClientId,
+        clientSecret: config.googleClientSecret,
+        overrideUserInfoOnSignIn: true,
+        disableIdTokenSignIn: true,
+      },
     },
-    account: {
-      accountLinking: { enabled: true, trustedProviders: ['github', 'google'] },
-    },
+    // No trustedProviders: a provider links to an existing account only when it verified the email.
+    account: { accountLinking: { enabled: true } },
     session: { expiresIn: 30 * DAY, updateAge: DAY },
     databaseHooks: {
       user: {

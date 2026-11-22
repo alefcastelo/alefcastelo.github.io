@@ -1,7 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
-import { getRequestHeaders } from '@tanstack/react-start/server'
-import { auth, type Auth } from '#/server/auth'
-import { config } from '#/server/config'
+import type { Auth } from '#/server/auth'
+import { currentViewer } from '#/server/request'
 
 /** What the browser may know about the signed-in reader. Never the email. */
 export type Viewer = { id: string; name: string; image: string | null; isAdmin: boolean }
@@ -18,6 +17,4 @@ export async function findViewer(
   return { id, name, image: image ?? null, isAdmin }
 }
 
-export const getViewer = createServerFn({ method: 'GET' }).handler(() =>
-  findViewer(auth, getRequestHeaders(), config.adminEmails),
-)
+export const getViewer = createServerFn({ method: 'GET' }).handler(() => currentViewer())

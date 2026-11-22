@@ -1,12 +1,12 @@
 import { useRouter } from '@tanstack/react-router'
-import { authClient } from '#/auth-client'
 import { CommentForm } from '#/comments/CommentForm'
 import { CommentItem } from '#/comments/CommentItem'
 import { createComment } from '#/server/comments'
 import type { CommentView } from '#/server/comment-store'
 import type { Viewer } from '#/server/viewer'
 
-const UNVERIFIED_EMAIL = 'unable_to_create_user'
+/** Better Auth's codes for a provider that did not verify the email: a new account, or a link to an existing one. */
+const UNVERIFIED_EMAIL = ['unable_to_create_user', 'account_not_linked']
 
 export function CommentsSection({
   slug,
@@ -67,8 +67,9 @@ export function CommentsSection({
 }
 
 function SignIn({ slug, error }: { slug: string; error?: string }) {
-  function signIn(provider: 'github' | 'google') {
+  async function signIn(provider: 'github' | 'google') {
     const post = `/posts/${slug}`
+    const { authClient } = await import('#/auth-client')
     return authClient.signIn.social({ provider, callbackURL: post, errorCallbackURL: post })
   }
 
@@ -76,7 +77,7 @@ function SignIn({ slug, error }: { slug: string; error?: string }) {
     <div>
       {error && (
         <p role="alert" className="mb-3 text-sm text-red-600 dark:text-red-400">
-          {error === UNVERIFIED_EMAIL
+          {UNVERIFIED_EMAIL.includes(error)
             ? 'Your account email must be verified with the provider'
             : 'Sign-in failed, try again'}
         </p>

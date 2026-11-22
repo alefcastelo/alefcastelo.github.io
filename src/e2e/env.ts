@@ -14,27 +14,21 @@ export const E2E_ENV = {
   NEWSLETTER_RATE_WINDOW_MINUTES: '10',
 }
 
-/** Signed-in readers the global setup creates, with the storageState file of each. */
+/** Readers the global setup creates. Only `recent` has a storageState signed in a moment ago. */
 export const READERS = {
-  /** Signed in a moment ago, no photo. */
+  /** No photo. */
   recent: {
     name: 'Recent Reader',
     image: null,
-    renewedDaysAgo: 0,
     storageState: 'test-results/auth/recent.json',
   },
-  /** Last renewed two days ago, so the next request renews the session. */
   stale: {
     name: 'Stale Reader',
     image: '/me.jpg',
-    renewedDaysAgo: 2,
-    storageState: 'test-results/auth/stale.json',
   },
   /** Listed in ADMIN_EMAILS. */
   admin: {
     name: 'Admin Reader',
     image: null,
-    renewedDaysAgo: 0,
-    storageState: 'test-results/auth/admin.json',
   },
 }

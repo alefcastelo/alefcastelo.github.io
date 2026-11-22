@@ -9,7 +9,7 @@ export function Avatar({ name, image, size }: { name: string; image: string | nu
       {image ? (
         <img src={image} alt="" width={size} height={size} className="size-full object-cover" />
       ) : (
-        name.trim().charAt(0).toUpperCase()
+        ([...name.trim()][0]?.toUpperCase() ?? '')
       )}
     </span>
   )

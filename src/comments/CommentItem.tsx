@@ -43,9 +43,14 @@ export function CommentItem({
 
   async function remove() {
     if (!window.confirm('Delete this comment?')) return
-    const result = await deleteComment({ data: comment.id })
-    setDeleteFailed(result !== 'deleted')
-    await router.invalidate()
+    setDeleteFailed(false)
+    try {
+      const result = await deleteComment({ data: comment.id })
+      setDeleteFailed(result !== 'deleted')
+      await router.invalidate()
+    } catch {
+      setDeleteFailed(true)
+    }
   }
 
   return (

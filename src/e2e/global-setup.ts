@@ -1,24 +1,16 @@
-import { randomUUID } from 'node:crypto'
 import { mkdirSync, writeFileSync } from 'node:fs'
 import { dirname } from 'node:path'
 import { READERS } from './env'
-import { insertSession, openDb, readerEmail, type ReaderKey } from './sessions'
+import { insertSession, insertUser, openDb, readerEmail, type ReaderKey } from './sessions'
 
-/** Runs after the web server migrated test-results/e2e.db: stores each reader and its storageState. */
+/** Runs after the web server migrated test-results/e2e.db: stores each reader, and the storageState of `recent`. */
 export default function globalSetup() {
   const sqlite = openDb()
   try {
-    const now = Date.now()
     for (const [key, reader] of Object.entries(READERS)) {
-      const userId = randomUUID()
-      sqlite
-        .prepare(
-          `INSERT INTO user (id, name, email, email_verified, image, created_at, updated_at)
-           VALUES (?, ?, ?, 1, ?, ?, ?)`,
-        )
-        .run(userId, reader.name, readerEmail(key as ReaderKey), reader.image, now, now)
-      const cookie = insertSession(sqlite, userId, reader.renewedDaysAgo)
-
+      const userId = insertUser(sqlite, { ...reader, email: readerEmail(key as ReaderKey) })
+      if (!('storageState' in reader)) continue
+      const cookie = insertSession(sqlite, userId, 0)
       mkdirSync(dirname(reader.storageState), { recursive: true })
       writeFileSync(reader.storageState, JSON.stringify({ cookies: [cookie], origins: [] }))
     }

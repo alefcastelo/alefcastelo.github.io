@@ -1,17 +1,14 @@
 import { expect, test, type Page } from '@playwright/test'
 import { READERS } from '#/e2e/env'
-import { openFirstPost } from '#/e2e/pages'
+import { openFirstPost, waitForHydration } from '#/e2e/pages'
 import { signInAs, signInAsNewReader, userExists } from '#/e2e/sessions'
 
 const accountMenu = (page: Page) => page.getByRole('button', { name: /^Account menu for / })
 
-/** Clicks until the menu opens: a click before hydration does nothing. */
 async function openAccountMenu(page: Page) {
-  const button = accountMenu(page)
-  await expect(async () => {
-    if ((await button.getAttribute('aria-expanded')) !== 'true') await button.click()
-    await expect(button).toHaveAttribute('aria-expanded', 'true', { timeout: 1000 })
-  }).toPass()
+  await waitForHydration(page)
+  await accountMenu(page).click()
+  await expect(accountMenu(page)).toHaveAttribute('aria-expanded', 'true')
 }
 
 test('a signed-in reader sees their photo at the top of the home and the posts', async ({

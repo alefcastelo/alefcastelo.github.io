@@ -8,6 +8,11 @@ const MESSAGES: Record<string, string> = {
 }
 const FALLBACK = "Couldn't save the comment, try again"
 
+/** What the reader reads for a refusal code from the server. */
+export function commentErrorMessage(code: string): string {
+  return MESSAGES[code] ?? FALLBACK
+}
+
 /** A comment box with a code-point counter. `onSubmit` returns `ok` or the server's refusal. */
 export function CommentForm({
   label,
@@ -39,14 +44,13 @@ export function CommentForm({
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setPending(true)
+    setError(null)
     try {
       const result = await onSubmit(body)
-      if (result === 'ok') {
-        setBody('')
-        setError(null)
-      } else {
-        setError(MESSAGES[result] ?? FALLBACK)
-      }
+      if (result === 'ok') setBody('')
+      else setError(commentErrorMessage(result))
+    } catch {
+      setError(FALLBACK)
     } finally {
       setPending(false)
     }

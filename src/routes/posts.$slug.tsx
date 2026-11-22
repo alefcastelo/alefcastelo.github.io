@@ -2,17 +2,16 @@ import { createFileRoute, notFound } from '@tanstack/react-router'
 import { CommentsSection } from '#/comments/CommentsSection'
 import { formatDate } from '#/format-date'
 import { SubscribeForm } from '#/newsletter/SubscribeForm'
-import { getCommentMaxLength, listComments } from '#/server/comments'
+import { listComments } from '#/server/comments'
 import { fetchPost } from '#/server/posts'
 
 export const Route = createFileRoute('/posts/$slug')({
   validateSearch: (search: Record<string, unknown>): { error?: string } =>
     typeof search.error === 'string' ? { error: search.error } : {},
   loader: async ({ params }) => {
-    const [post, comments, commentMaxLength] = await Promise.all([
+    const [post, { comments, commentMaxLength }] = await Promise.all([
       fetchPost({ data: params.slug }),
       listComments({ data: params.slug }),
-      getCommentMaxLength(),
     ])
     if (post === null) throw notFound()
     return { post, comments, commentMaxLength }

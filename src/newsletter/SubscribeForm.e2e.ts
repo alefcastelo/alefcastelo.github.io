@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test'
+import { openFirstPost } from '#/e2e/pages'
 
 const SUBSCRIBED = "Thanks — you're subscribed."
 
@@ -33,9 +34,7 @@ test('an invalid email is refused', async ({ page }) => {
 })
 
 test('the form is at the end of a post', async ({ page }) => {
-  await page.goto('/')
-  await page.getByRole('link', { name: /./ }).filter({ has: page.getByRole('heading') }).first().click()
-  await expect(page).toHaveURL(/\/posts\//)
+  await openFirstPost(page)
   await submit(page, uniqueEmail())
   await expect(page.getByRole('status')).toHaveText(SUBSCRIBED)
 })

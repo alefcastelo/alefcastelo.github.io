@@ -8,25 +8,12 @@ import {
   type CommentLimits,
 } from '#/server/comment-store'
 import type { Db } from '#/server/db/client'
-import { comments, user } from '#/server/db/schema'
-import { createTestDb } from '#/server/db/test-db'
+import { comments } from '#/server/db/schema'
+import { commentIdOf as idOf, createTestDbWithReaders as setup } from '#/server/db/test-db'
 import type { Viewer } from '#/server/viewer'
 
 const SLUG = listPosts()[0].slug
 const LIMITS: CommentLimits = { maxLength: 280, ratePerMinute: 100 }
-
-function setup() {
-  const db = createTestDb()
-  const reader = (name: string, isAdmin = false): Viewer => {
-    const id = crypto.randomUUID()
-    const image = `https://example.com/${name}.png`
-    db.insert(user)
-      .values({ id, name, email: `${name}@example.com`, emailVerified: true, image })
-      .run()
-    return { id, name, image, isAdmin }
-  }
-  return { db, reader }
-}
 
 let clock = Date.UTC(2026, 10, 22)
 /** Each call is one second after the previous one, so the order of creation is unambiguous. */
@@ -37,10 +24,6 @@ function tick() {
 
 function create(db: Db, viewer: Viewer | null, body: string, extra: { parentId?: string; slug?: string } = {}) {
   return createPostComment(db, viewer, LIMITS, { slug: SLUG, body, ...extra }, tick())
-}
-
-function idOf(db: Db, body: string) {
-  return db.select().from(comments).all().find((row) => row.body === body)!.id
 }
 
 describe('listPostComments', () => {
@@ -112,6 +95,15 @@ describe('createPostComment', () => {
       expect(create(db, ada, body), JSON.stringify(body)).toBe('empty')
     }
     expect(db.select().from(comments).all()).toEqual([])
+  })
+
+  it('refuses text of only invisible characters, such as zero-width spaces', () => {
+    const { db, reader } = setup()
+    const ada = reader('ada')
+    for (const body of ['\u200B', '\u200B\u200B \u200C\u200D\u2060', '\uFEFF\n\u200B']) {
+      expect(create(db, ada, body), JSON.stringify(body)).toBe('empty')
+    }
+    expect(create(db, ada, 'hi\u200B'), 'visible text with a zero-width space').toBe('created')
   })
 
   it('counts the maximum length in code points', () => {

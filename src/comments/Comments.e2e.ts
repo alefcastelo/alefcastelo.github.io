@@ -67,10 +67,7 @@ test('a signed-in reader replies to a comment, and the reply shows under it', as
   await writeComment(page, top)
 
   const topComment = commentWith(page, top)
-  await expect(async () => {
-    await topComment.getByRole('button', { name: 'Reply' }).click()
-    await expect(topComment.getByRole('textbox', { name: 'Reply' })).toBeVisible({ timeout: 1000 })
-  }).toPass()
+  await topComment.getByRole('button', { name: 'Reply' }).click()
   await topComment.getByRole('textbox', { name: 'Reply' }).fill(reply)
   await topComment.getByRole('button', { name: 'Reply', exact: true }).click()
 
@@ -107,8 +104,10 @@ test('a refused sign-in shows why on the post', async ({ page }) => {
   const postPath = await openFirstPost(page)
   const alert = comments(page).getByRole('alert')
 
-  await page.goto(`${postPath}?error=unable_to_create_user`)
-  await expect(alert).toHaveText('Your account email must be verified with the provider')
+  for (const error of ['unable_to_create_user', 'account_not_linked']) {
+    await page.goto(`${postPath}?error=${error}`)
+    await expect(alert, error).toHaveText('Your account email must be verified with the provider')
+  }
 
   await page.goto(`${postPath}?error=state_mismatch`)
   await expect(alert).toHaveText('Sign-in failed, try again')
@@ -116,14 +115,6 @@ test('a refused sign-in shows why on the post', async ({ page }) => {
   await page.goto(postPath)
   await expect(alert).toHaveCount(0)
 })
-
-/** Clicks until `done` holds: a click before hydration does nothing. */
-async function clickUntil(button: Locator, done: () => Promise<void>) {
-  await expect(async () => {
-    await button.click()
-    await done()
-  }).toPass()
-}
 
 test('the author edits a comment in place, and it shows "(edited)"', async ({ page, context }) => {
   await signInAs(context, 'recent')
@@ -135,9 +126,7 @@ test('the author edits a comment in place, and it shows "(edited)"', async ({ pa
   const comment = commentWith(page, before)
   await expect(comment.getByText('(edited)')).toHaveCount(0)
   const box = comment.getByRole('textbox', { name: 'Edit comment' })
-  await clickUntil(comment.getByRole('button', { name: 'Edit' }), () =>
-    expect(box).toBeVisible({ timeout: 1000 }),
-  )
+  await comment.getByRole('button', { name: 'Edit' }).click()
   await expect(box).toHaveValue(before)
   await box.fill(after)
   await comments(page).getByRole('button', { name: 'Save' }).click()
@@ -159,8 +148,8 @@ test('the author deletes a comment after confirming', async ({ page, context }) 
     dialogs.push(dialog.message())
     void dialog.dismiss()
   })
-  await clickUntil(deleteButton, async () => expect(dialogs).toHaveLength(1))
-  expect(dialogs).toEqual(['Delete this comment?'])
+  await deleteButton.click()
+  await expect.poll(() => dialogs).toEqual(['Delete this comment?'])
   await expect(commentWith(page, text)).toBeVisible()
 
   page.once('dialog', (dialog) => void dialog.accept())
@@ -179,9 +168,7 @@ test('the admin deletes a comment with replies, which stays as "[deleted]" witho
   const reply = uniqueText('The reply')
   await writeComment(page, top)
   const topComment = commentWith(page, top)
-  await clickUntil(topComment.getByRole('button', { name: 'Reply' }), () =>
-    expect(topComment.getByRole('textbox', { name: 'Reply' })).toBeVisible({ timeout: 1000 }),
-  )
+  await topComment.getByRole('button', { name: 'Reply' }).click()
   await topComment.getByRole('textbox', { name: 'Reply' }).fill(reply)
   await topComment.getByRole('button', { name: 'Reply', exact: true }).click()
   await expect(commentWith(page, reply)).toBeVisible()
@@ -201,12 +188,12 @@ test('the admin deletes a comment with replies, which stays as "[deleted]" witho
   await signInAs(admin, 'admin')
   const adminPage = await admin.newPage()
   await adminPage.goto(postPath)
+  await waitForHydration(adminPage)
   const adminView = commentWith(adminPage, top)
   await expect(adminView.getByRole('button', { name: 'Edit' }), 'the admin edits nobody').toHaveCount(0)
   adminPage.on('dialog', (dialog) => void dialog.accept())
-  await clickUntil(adminView.getByRole('button', { name: 'Delete' }), () =>
-    expect(adminPage.locator('#comments').getByText(top)).toHaveCount(0, { timeout: 1000 }),
-  )
+  await adminView.getByRole('button', { name: 'Delete' }).click()
+  await expect(adminPage.locator('#comments').getByText(top)).toHaveCount(0)
   await admin.close()
 
   await page.reload()

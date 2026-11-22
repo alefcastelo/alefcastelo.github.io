@@ -112,6 +112,22 @@ describe('sign-in/social', () => {
   )
 })
 
+describe('sign-in with a Google id token', () => {
+  it('is refused: the only way in is the OAuth redirect', async () => {
+    const { db, auth } = setup()
+    vi.stubGlobal('fetch', fakeProviders({ google: { email: 'reader@example.com', verified: true } }))
+    const response = await authRequest(auth, 'POST', '/sign-in/social', {
+      body: { provider: 'google', idToken: { token: 'x' } },
+    })
+    const body = await response.json()
+    expect(response.ok).toBe(false)
+    expect(body).toMatchObject({ code: 'ID_TOKEN_NOT_SUPPORTED' })
+    expect(JSON.stringify(body)).not.toContain('@')
+    expect(cookieHeader(response)).not.toContain('better-auth.session_token=')
+    expect(db.select().from(session).all()).toHaveLength(0)
+  })
+})
+
 describe('the /api/auth allowlist', () => {
   it.each([
     ['POST', '/update-user'],
@@ -164,6 +180,44 @@ describe('OAuth callback', () => {
     const accounts = db.select().from(account).all()
     expect(accounts.map((row) => row.providerId).sort()).toEqual(['github', 'google'])
     expect(accounts.every((row) => row.userId === users[0].id)).toBe(true)
+  })
+
+  it.each([
+    ['github', 'google'],
+    ['google', 'github'],
+  ] as const)(
+    'after a verified %s sign-in, refuses to link an unverified %s email to that account',
+    async (first, second) => {
+      const { db, auth } = setup()
+      vi.stubGlobal(
+        'fetch',
+        fakeProviders({
+          [first]: { email: 'reader@example.com', verified: true },
+          [second]: { email: 'reader@example.com', verified: false },
+        }),
+      )
+      await signIn(auth, first)
+      const response = await signIn(auth, second)
+
+      const location = new URL(response.headers.get('location') ?? '', BASE_URL)
+      expect(location.pathname).toBe(POST_URL)
+      expect(location.searchParams.get('error')).toBe('account_not_linked')
+      expect(cookieHeader(response)).not.toContain('better-auth.session_token=')
+      expect(db.select().from(account).all().map((row) => row.providerId)).toEqual([first])
+      expect(db.select().from(session).all(), 'only the first sign-in has a session').toHaveLength(1)
+    },
+  )
+
+  it('updates the name and photo from the provider on each sign-in', async () => {
+    const { db, auth } = setup()
+    vi.stubGlobal('fetch', fakeProviders({ github: { email: 'reader@example.com', verified: true, name: 'Ada', image: 'https://example.com/ada.png' } }))
+    await signIn(auth, 'github')
+    vi.stubGlobal('fetch', fakeProviders({ github: { email: 'reader@example.com', verified: true, name: 'Ada Lovelace', image: 'https://example.com/lovelace.png' } }))
+    await signIn(auth, 'github')
+
+    const users = db.select().from(user).all()
+    expect(users).toHaveLength(1)
+    expect(users[0]).toMatchObject({ name: 'Ada Lovelace', image: 'https://example.com/lovelace.png' })
   })
 
   it('refuses to create an account whose email the provider has not verified', async () => {

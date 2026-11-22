@@ -45,14 +45,33 @@ function sessionCookie(token: string, expiresAt: number) {
   }
 }
 
-/** Signs the context in as a reader the global setup created, with a session of its own. */
-export async function signInAs(context: BrowserContext, key: ReaderKey) {
+/** Stores a reader with a verified email and returns their id. */
+export function insertUser(
+  sqlite: Database.Database,
+  user: { name: string; email: string; image: string | null },
+): string {
+  const id = randomUUID()
+  const now = Date.now()
+  sqlite
+    .prepare(
+      `INSERT INTO user (id, name, email, email_verified, image, created_at, updated_at)
+       VALUES (?, ?, ?, 1, ?, ?, ?)`,
+    )
+    .run(id, user.name, user.email, user.image, now, now)
+  return id
+}
+
+/**
+ * Signs the context in as a reader the global setup created, with a session of its own
+ * renewed `renewedDaysAgo` days ago.
+ */
+export async function signInAs(context: BrowserContext, key: ReaderKey, renewedDaysAgo = 0) {
   const sqlite = openDb()
   try {
     const { id } = sqlite
       .prepare('SELECT id FROM user WHERE email = ?')
       .get(readerEmail(key)) as { id: string }
-    await context.addCookies([insertSession(sqlite, id, 0)])
+    await context.addCookies([insertSession(sqlite, id, renewedDaysAgo)])
   } finally {
     sqlite.close()
   }
@@ -62,14 +81,7 @@ export async function signInAs(context: BrowserContext, key: ReaderKey) {
 export async function signInAsNewReader(context: BrowserContext, name: string): Promise<string> {
   const sqlite = openDb()
   try {
-    const id = randomUUID()
-    const now = Date.now()
-    sqlite
-      .prepare(
-        `INSERT INTO user (id, name, email, email_verified, image, created_at, updated_at)
-         VALUES (?, ?, ?, 1, NULL, ?, ?)`,
-      )
-      .run(id, name, `${id}@example.com`, now, now)
+    const id = insertUser(sqlite, { name, email: `${randomUUID()}@example.com`, image: null })
     await context.addCookies([insertSession(sqlite, id, 0)])
     return id
   } finally {

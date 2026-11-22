@@ -7,7 +7,6 @@ import {
   useRouter,
   useRouterState,
 } from '@tanstack/react-router'
-import { authClient } from '#/auth-client'
 import { Avatar } from '#/Avatar'
 import { deleteAccount } from '#/server/account'
 import { getViewer, type Viewer } from '#/server/viewer'
@@ -116,10 +115,13 @@ function SiteHeader() {
 
 const DELETE_ACCOUNT_WARNING =
   'This deletes your account and reactions. Comments with replies stay as [deleted].'
+const SIGN_OUT_FAILED = "Couldn't sign out, try again"
+const DELETE_ACCOUNT_FAILED = "Couldn't delete the account, try again"
 
 function UserMenu({ viewer }: { viewer: Viewer }) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
+  const [failure, setFailure] = useState<string | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -139,14 +141,26 @@ function UserMenu({ viewer }: { viewer: Viewer }) {
   }, [open])
 
   async function signOut() {
-    await authClient.signOut()
+    setFailure(null)
+    try {
+      const { authClient } = await import('#/auth-client')
+      const { error } = await authClient.signOut()
+      if (error) return setFailure(SIGN_OUT_FAILED)
+    } catch {
+      return setFailure(SIGN_OUT_FAILED)
+    }
     setOpen(false)
     await router.invalidate()
   }
 
   async function removeAccount() {
     if (!window.confirm(DELETE_ACCOUNT_WARNING)) return
-    await deleteAccount()
+    setFailure(null)
+    try {
+      await deleteAccount()
+    } catch {
+      return setFailure(DELETE_ACCOUNT_FAILED)
+    }
     setOpen(false)
     await router.invalidate()
   }
@@ -185,6 +199,11 @@ function UserMenu({ viewer }: { viewer: Viewer }) {
           >
             Delete account
           </button>
+          {failure && (
+            <p role="alert" className="px-4 py-2 text-sm text-red-600 dark:text-red-400">
+              {failure}
+            </p>
+          )}
         </div>
       )}
     </div>
