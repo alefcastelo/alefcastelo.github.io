@@ -64,29 +64,29 @@ export function CommentForm({
         onChange={(event) => setBody(event.target.value)}
         autoFocus={autoFocus}
         rows={3}
-        className="w-full rounded-sm border border-muted/40 bg-transparent px-3 py-2"
+        className="field"
       />
       <div className="flex flex-wrap items-center gap-3">
         <button
           type="submit"
           disabled={!hydrated || pending || tooLong}
-          className="rounded-sm bg-text px-4 py-1.5 font-medium text-bg disabled:opacity-60"
+          className="command"
         >
           {submitLabel}
         </button>
         {onCancel && (
-          <button type="button" onClick={onCancel} className="text-sm text-muted underline underline-offset-4">
+          <button type="button" onClick={onCancel} className="quiet text-sm">
             Cancel
           </button>
         )}
         <span
-          className={`ml-auto text-sm tabular-nums ${tooLong ? 'font-semibold text-red-600 dark:text-red-400' : 'text-muted'}`}
+          className={`ml-auto font-pixel text-xl leading-none ${tooLong ? 'text-amber' : 'text-muted'}`}
         >
           {length}/{maxLength}
         </span>
       </div>
       {error && (
-        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
+        <p role="alert" className="alert text-sm">
           {error}
         </p>
       )}

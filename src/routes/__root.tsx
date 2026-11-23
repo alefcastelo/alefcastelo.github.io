@@ -37,14 +37,37 @@ function RootShell({ children }: { children: ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <div className="relative mx-auto max-w-[680px] px-4 py-8 sm:py-12">
-          {viewer && (
-            <div className="absolute top-8 right-4 sm:top-12">
-              <UserMenu viewer={viewer} />
+        <div className="mx-auto max-w-[1120px] px-4 pt-6 pb-16 sm:px-10 sm:pt-10">
+          <header className="flex items-center justify-between gap-6">
+            {isHome ? (
+              <span />
+            ) : (
+              <Link
+                to="/"
+                className="font-pixel text-[28px] leading-none tracking-[0.08em] text-ivory uppercase hover:text-amber"
+              >
+                Alef Castelo
+              </Link>
+            )}
+            <div className="flex items-center gap-5 sm:gap-7">
+              <ul className="flex gap-4 font-pixel text-[22px] leading-none sm:gap-6">
+                {LINKS.map((link) => (
+                  <li key={link.href}>
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted lowercase hover:text-amber"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+              {viewer && <UserMenu viewer={viewer} />}
             </div>
-          )}
-          {isHome ? <Bio /> : <SiteHeader />}
-          {children}
+          </header>
+          <div className="mt-14 sm:mt-24">{children}</div>
         </div>
         <Scripts />
       </body>
@@ -57,61 +80,6 @@ const LINKS = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/alefcastelo' },
   { label: 'Bidirekt', href: 'https://bidirekt.com' },
 ]
-
-function Bio() {
-  return (
-    <header className="mb-10 flex flex-col items-center border-b border-muted/25 pb-8 text-center">
-      <Link to="/">
-        <img
-          src="/me.jpg"
-          alt="Alef Castelo"
-          width={128}
-          height={128}
-          className="size-32 rounded-full object-cover"
-        />
-      </Link>
-      <Link to="/" className="mt-4 text-2xl font-semibold tracking-tight">
-        Alef Castelo
-      </Link>
-      <p className="mt-3 max-w-[46ch] text-pretty text-muted">
-        Software engineer based in Mexico City. I've been building backend
-        systems for over a decade, from monoliths to microservices, with a soft
-        spot for testing. Now I'm building Bidirekt.
-      </p>
-      <ul className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-2">
-        {LINKS.map((link) => (
-          <li key={link.href}>
-            <a
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium underline underline-offset-4"
-            >
-              {link.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </header>
-  )
-}
-
-function SiteHeader() {
-  return (
-    <header className="mb-10">
-      <Link to="/" className="inline-flex items-center gap-3 font-semibold tracking-tight">
-        <img
-          src="/me.jpg"
-          alt=""
-          width={36}
-          height={36}
-          className="size-9 rounded-full object-cover"
-        />
-        Alef Castelo
-      </Link>
-    </header>
-  )
-}
 
 const DELETE_ACCOUNT_WARNING =
   'This deletes your account and reactions. Comments with replies stay as [deleted].'
@@ -173,21 +141,20 @@ function UserMenu({ viewer }: { viewer: Viewer }) {
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpen(!open)}
-        className="rounded-full"
       >
         <Avatar name={viewer.name} image={viewer.image} size={36} />
       </button>
       {open && (
         <div
           role="menu"
-          className="absolute right-0 z-10 mt-2 min-w-40 rounded-md border border-muted/25 bg-bg py-1 shadow-lg"
+          className="absolute right-0 z-10 mt-3 min-w-48 bg-well py-1 shadow-[0_12px_32px_rgb(0_0_0/0.7)]"
         >
           <p className="truncate px-4 py-2 text-sm text-muted">{viewer.name}</p>
           <button
             type="button"
             role="menuitem"
             onClick={signOut}
-            className="block w-full px-4 py-2 text-left hover:bg-muted/10"
+            className="block w-full px-4 py-2 text-left text-ivory hover:text-amber"
           >
             Sign out
           </button>
@@ -195,12 +162,12 @@ function UserMenu({ viewer }: { viewer: Viewer }) {
             type="button"
             role="menuitem"
             onClick={removeAccount}
-            className="block w-full px-4 py-2 text-left text-red-600 hover:bg-muted/10 dark:text-red-400"
+            className="block w-full px-4 py-2 text-left text-muted hover:text-amber"
           >
             Delete account
           </button>
           {failure && (
-            <p role="alert" className="px-4 py-2 text-sm text-red-600 dark:text-red-400">
+            <p role="alert" className="alert px-4 py-2 text-sm">
               {failure}
             </p>
           )}
@@ -213,9 +180,12 @@ function UserMenu({ viewer }: { viewer: Viewer }) {
 function NotFound() {
   return (
     <main>
-      <h1 className="text-3xl font-semibold tracking-tight">Page not found</h1>
-      <p className="mt-4 text-muted">
-        <Link to="/" className="underline underline-offset-4">
+      <p aria-hidden="true" className="font-pixel text-[clamp(96px,22vw,200px)] leading-[0.8] text-ash">404</p>
+      <h1 className="mt-8 font-pixel text-5xl leading-none text-ivory">
+        Page not found<span aria-hidden="true" className="caret ml-2" />
+      </h1>
+      <p className="mt-6">
+        <Link to="/" className="quiet">
           Back to home
         </Link>
       </p>

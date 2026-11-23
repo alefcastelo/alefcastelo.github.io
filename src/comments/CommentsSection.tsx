@@ -33,18 +33,18 @@ export function CommentsSection({
   }
 
   return (
-    <section id="comments" aria-labelledby="comments-heading" className="border-t border-muted/25 pt-8">
-      <h2 id="comments-heading" className="font-semibold tracking-tight">
+    <section id="comments" aria-labelledby="comments-heading">
+      <h2 id="comments-heading" className="font-pixel text-[32px] leading-none text-ivory">
         Comments
       </h2>
       {topLevel.length > 0 && (
-        <ol className="mt-6 flex flex-col gap-6">
+        <ol className="mt-8 flex flex-col gap-8">
           {topLevel.map((top) => {
             const replies = comments.filter((reply) => reply.parentId === top.id)
             return (
               <CommentItem key={top.id} comment={top} slug={slug} maxLength={maxLength} canReply={viewer !== null}>
                 {replies.length > 0 && (
-                  <ol className="mt-4 flex flex-col gap-4">
+                  <ol className="mt-6 flex flex-col gap-6">
                     {replies.map((reply) => (
                       <CommentItem key={reply.id} comment={reply} slug={slug} maxLength={maxLength} canReply={false} />
                     ))}
@@ -55,7 +55,7 @@ export function CommentsSection({
           })}
         </ol>
       )}
-      <div className="mt-6">
+      <div className="mt-10">
         {viewer ? (
           <CommentForm label="Comment" submitLabel="Comment" maxLength={maxLength} onSubmit={comment} />
         ) : (
@@ -76,25 +76,25 @@ function SignIn({ slug, error }: { slug: string; error?: string }) {
   return (
     <div>
       {error && (
-        <p role="alert" className="mb-3 text-sm text-red-600 dark:text-red-400">
+        <p role="alert" className="alert mb-3 text-sm">
           {UNVERIFIED_EMAIL.includes(error)
             ? 'Your account email must be verified with the provider'
             : 'Sign-in failed, try again'}
         </p>
       )}
       <p className="text-muted">Sign in to comment.</p>
-      <div className="mt-3 flex flex-wrap gap-2">
+      <div className="mt-4 flex flex-wrap gap-2">
         <button
           type="button"
           onClick={() => signIn('github')}
-          className="rounded-sm border border-muted/40 px-4 py-1.5 font-medium"
+          className="command"
         >
           Sign in with GitHub
         </button>
         <button
           type="button"
           onClick={() => signIn('google')}
-          className="rounded-sm border border-muted/40 px-4 py-1.5 font-medium"
+          className="command"
         >
           Sign in with Google
         </button>

@@ -37,7 +37,7 @@ export function ReactionBar({
 
   return (
     <div>
-      <ul aria-label="Reactions" className="flex flex-wrap gap-2">
+      <ul aria-label="Reactions" className="flex flex-wrap gap-1">
         {reactions.map(({ emoji, count, reactedByViewer }) => (
           <li key={emoji}>
             <button
@@ -46,25 +46,25 @@ export function ReactionBar({
               aria-pressed={reactedByViewer}
               disabled={pending}
               onClick={() => toggle(emoji)}
-              className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-sm tabular-nums ${
-                reactedByViewer ? 'border-text bg-muted/15 font-semibold' : 'border-muted/40 text-muted'
+              className={`flex items-center gap-2 px-3 py-1.5 font-pixel text-2xl leading-none hover:bg-well ${
+                reactedByViewer ? 'bg-well text-amber' : 'text-muted'
               }`}
             >
-              <span aria-hidden="true">{emoji}</span>
+              <span aria-hidden="true" className="font-sans text-2xl leading-none">{emoji}</span>
               <span>{count}</span>
             </button>
           </li>
         ))}
       </ul>
       {askSignIn && (
-        <p role="status" className="mt-2 text-sm">
-          <a href="#comments" className="underline underline-offset-4">
+        <p role="status" className="mt-3 text-sm">
+          <a href="#comments" className="quiet">
             Sign in to react
           </a>
         </p>
       )}
       {failed && (
-        <p role="alert" className="mt-2 text-sm text-red-600 dark:text-red-400">
+        <p role="alert" className="alert mt-3 text-sm">
           Couldn't save the reaction, try again
         </p>
       )}

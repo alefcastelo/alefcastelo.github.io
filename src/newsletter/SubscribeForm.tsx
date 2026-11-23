@@ -33,21 +33,21 @@ export function SubscribeForm() {
   }
 
   return (
-    <section className="border-t border-muted/25 pt-8">
-      <h2 className="font-semibold tracking-tight">Get new posts by email</h2>
-      <form noValidate onSubmit={onSubmit} className="mt-3 flex flex-wrap gap-2">
+    <section>
+      <h2 className="font-pixel text-[32px] leading-none text-ivory">Get new posts by email</h2>
+      <form noValidate onSubmit={onSubmit} className="mt-5 flex flex-wrap gap-2">
         <input
           type="email"
           name="email"
           aria-label="Email"
           placeholder="you@example.com"
           autoComplete="email"
-          className="min-w-0 flex-1 rounded-sm border border-muted/40 bg-transparent px-3 py-2"
+          className="field min-w-0 flex-1 basis-56"
         />
         <button
           type="submit"
           disabled={!hydrated || pending}
-          className="rounded-sm bg-text px-4 py-2 font-medium text-bg disabled:opacity-60"
+          className="command"
         >
           Subscribe
         </button>

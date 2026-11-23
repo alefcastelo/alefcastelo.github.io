@@ -1,33 +1,121 @@
 @import 'tailwindcss';
 
-@theme {
-  --color-text: #1c1c1e;
-  --color-muted: #6b6b70;
-  --color-bg: #fbfbf9;
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-serif: Charter, 'Bitstream Charter', 'Iowan Old Style', Georgia, serif;
+@font-face {
+  font-family: 'VT323';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/vt323-400-latin.woff2') format('woff2');
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-text: #e8e8e6;
-    --color-muted: #9a9a9f;
-    --color-bg: #151516;
-  }
+@font-face {
+  font-family: 'Hanken Grotesk';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/hanken-grotesk-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Hanken Grotesk';
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/hanken-grotesk-italic-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-400-latin.woff2') format('woff2');
+}
+
+/* An emissive black void, four dust neutrals from ash to ivory, and one signal amber. */
+@theme {
+  --color-void: #050505;
+  --color-well: #0e0e0d;
+  --color-ivory: #efe8d8;
+  --color-text: #d6d0c2;
+  --color-muted: #8f897c;
+  --color-ash: #3a3833;
+  --color-amber: #ffb000;
+  --color-bg: var(--color-void);
+  --font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-pixel: 'VT323', ui-monospace, monospace;
+}
+
+:root {
+  color-scheme: dark;
+  scrollbar-color: var(--color-ash) var(--color-void);
 }
 
 body {
-  background: var(--color-bg);
+  background-color: var(--color-void);
+  /* Two fields of still dust behind the work; the reading column sits over them unchanged. */
+  background-image:
+    radial-gradient(#2b2a27 1px, transparent 1.2px),
+    radial-gradient(#1b1a18 1px, transparent 1.2px);
+  background-size:
+    61px 67px,
+    97px 89px;
+  background-position:
+    0 0,
+    31px 43px;
+  background-attachment: fixed;
   color: var(--color-text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  caret-color: var(--color-amber);
+}
+
+::selection {
+  background: var(--color-amber);
+  color: var(--color-void);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 3px;
 }
 
 @layer components {
+  /* The one moving thing on the page: a block caret beside the line it marks. */
+  .caret {
+    display: inline-block;
+    width: 0.5em;
+    height: 0.8em;
+    background: var(--color-amber);
+    animation: caret-blink 1.06s steps(1) infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .caret {
+      animation: none;
+    }
+  }
+
+  /* A failure is a reversed glyph cell, not a red line. */
+  .alert {
+    color: var(--color-ivory);
+  }
+
+  .alert::before {
+    content: 'ERR' / '';
+    margin-right: 0.6em;
+    padding: 0 0.3em;
+    background: var(--color-ivory);
+    color: var(--color-void);
+    font-family: var(--font-pixel);
+    font-size: 1.15em;
+    line-height: 1;
+  }
+
   .prose {
-    font-family: var(--font-serif);
-    font-size: 1.1875rem;
-    line-height: 1.7;
+    font-size: 1.125rem;
+    line-height: 1.75;
     overflow-wrap: break-word;
   }
 
@@ -35,17 +123,43 @@ body {
     margin-top: 1.25em;
   }
 
-  .prose h2 {
+  .prose h2,
+  .prose h3 {
     margin-top: 2em;
-    font-family: var(--font-sans);
-    font-size: 1.375rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
+    font-family: var(--font-pixel);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--color-ivory);
+  }
+
+  .prose h2 {
+    font-size: 2.125rem;
+  }
+
+  .prose h3 {
+    font-size: 1.625rem;
+  }
+
+  .prose h2 + *,
+  .prose h3 + * {
+    margin-top: 0.6em;
+  }
+
+  .prose ul,
+  .prose ol {
+    padding-left: 1.25em;
   }
 
   .prose ul {
-    list-style: disc;
-    padding-left: 1.25em;
+    list-style: square;
+  }
+
+  .prose ol {
+    list-style: decimal;
+  }
+
+  .prose li::marker {
+    color: var(--color-muted);
   }
 
   .prose li + li {
@@ -53,25 +167,136 @@ body {
   }
 
   .prose a {
+    color: var(--color-ivory);
     text-decoration: underline;
+    text-decoration-color: var(--color-muted);
     text-underline-offset: 3px;
+  }
+
+  .prose a:hover {
+    text-decoration-color: var(--color-amber);
   }
 
   .prose strong {
     font-weight: 600;
+    color: var(--color-ivory);
+  }
+
+  .prose blockquote {
+    padding-left: 1.25em;
+    color: var(--color-muted);
+    font-style: italic;
+  }
+
+  .prose hr {
+    border: 0;
+    height: 1em;
+    background: radial-gradient(var(--color-muted) 1px, transparent 1.5px) center / 1em 1em repeat-x;
   }
 
   .prose img {
     width: 100%;
     height: auto;
-    border-radius: 4px;
   }
 
   .prose code {
+    font-family: var(--font-mono);
     font-size: 0.85em;
+    color: var(--color-ivory);
+  }
+
+  .prose :not(pre) > code {
+    padding: 0.1em 0.3em;
+    background: var(--color-well);
   }
 
   .prose pre {
     overflow-x: auto;
+    padding: 1em 1.25em;
+    background: var(--color-well);
+    font-size: 0.95rem;
+    line-height: 1.6;
   }
+
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .prose th {
+    text-align: left;
+    font-weight: 600;
+    color: var(--color-ivory);
+  }
+
+  .prose th,
+  .prose td {
+    padding: 0.4em 1em 0.4em 0;
+  }
+
+  /* A text input as a prompt line over the void. */
+  .field {
+    width: 100%;
+    background: var(--color-well);
+    color: var(--color-ivory);
+    padding: 0.6rem 0.75rem;
+  }
+
+  .field::placeholder {
+    color: var(--color-muted);
+  }
+
+  /* A command, set in the bitmap face, that lights amber when it can act. */
+  .command {
+    font-family: var(--font-pixel);
+    font-size: 1.375rem;
+    line-height: 1;
+    padding: 0.45rem 0.9rem;
+    background: var(--color-well);
+    color: var(--color-ivory);
+  }
+
+  .command:not(:disabled):hover {
+    color: var(--color-amber);
+  }
+
+  .command:disabled {
+    color: var(--color-muted);
+  }
+
+  /* A secondary action: dim text that brightens. */
+  .quiet {
+    color: var(--color-muted);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .quiet:hover {
+    color: var(--color-ivory);
+  }
+}
+
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* The caret marks the newest post, and moves to the post the reader points at. */
+.index .caret {
+  visibility: hidden;
+}
+
+.index > li:first-child .caret {
+  visibility: visible;
+}
+
+.index:has(> li:hover, > li:focus-within) > li .caret {
+  visibility: hidden;
+}
+
+.index:has(> li:hover, > li:focus-within) > li:is(:hover, :focus-within) .caret {
+  visibility: visible;
 }

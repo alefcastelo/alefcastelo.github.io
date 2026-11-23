@@ -4,7 +4,7 @@ export function Avatar({ name, image, size }: { name: string; image: string | nu
     <span
       aria-hidden="true"
       style={{ width: size, height: size }}
-      className="flex shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted/25 font-semibold"
+      className="flex shrink-0 items-center justify-center overflow-hidden bg-well font-pixel text-xl text-ivory"
     >
       {image ? (
         <img src={image} alt="" width={size} height={size} className="size-full object-cover" />

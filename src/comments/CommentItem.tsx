@@ -62,11 +62,11 @@ export function CommentItem({
         {comment.author ? (
           <Avatar name={comment.author.name} image={comment.author.image} size={32} />
         ) : (
-          <span aria-hidden="true" className="size-8 shrink-0 rounded-full bg-muted/15" />
+          <span aria-hidden="true" className="size-8 shrink-0 bg-well" />
         )}
         <div className="min-w-0 flex-1">
           <header className="flex flex-wrap items-baseline gap-x-2 text-sm">
-            {comment.author && <span className="font-semibold">{comment.author.name}</span>}
+            {comment.author && <span className="font-semibold text-ivory">{comment.author.name}</span>}
             <time dateTime={new Date(comment.createdAt).toISOString()} className="text-muted">
               {formatDate(new Date(comment.createdAt))}
             </time>
@@ -88,31 +88,31 @@ export function CommentItem({
             </div>
           ) : (
             <div
-              className="prose mt-1 font-sans text-base"
+              className="prose mt-1 text-base"
               dangerouslySetInnerHTML={{ __html: comment.html }}
             />
           )}
           {!editing && (
-            <div className="mt-1 flex gap-4 text-sm text-muted empty:hidden">
+            <div className="mt-2 flex gap-4 text-sm empty:hidden">
               {canReply && !replying && (
-                <button type="button" onClick={() => setReplying(true)} className="underline underline-offset-4">
+                <button type="button" onClick={() => setReplying(true)} className="quiet">
                   Reply
                 </button>
               )}
               {comment.canEdit && (
-                <button type="button" onClick={() => setEditing(true)} className="underline underline-offset-4">
+                <button type="button" onClick={() => setEditing(true)} className="quiet">
                   Edit
                 </button>
               )}
               {comment.canDelete && (
-                <button type="button" onClick={remove} className="underline underline-offset-4">
+                <button type="button" onClick={remove} className="quiet">
                   Delete
                 </button>
               )}
             </div>
           )}
           {deleteFailed && (
-            <p role="alert" className="mt-1 text-sm text-red-600 dark:text-red-400">
+            <p role="alert" className="alert mt-1 text-sm">
               Couldn't delete the comment, try again
             </p>
           )}

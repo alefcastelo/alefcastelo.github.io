@@ -35,18 +35,18 @@ function PostPage() {
   const { viewer } = Route.useRouteContext()
   const { error } = Route.useSearch()
   return (
-    <article>
-      <time dateTime={post.date} className="text-sm text-muted">
-        {formatDate(new Date(post.date))}
-      </time>
-      <h1 className="mt-2 text-3xl leading-tight font-semibold tracking-tight text-balance sm:text-4xl">
+    <article className="max-w-[680px]">
+      <h1 className="font-pixel text-[clamp(44px,7vw,72px)] leading-[0.92] text-balance text-ivory">
         {post.title}
       </h1>
-      <div className="prose mt-10" dangerouslySetInnerHTML={{ __html: post.html }} />
-      <div className="mt-12">
+      <time dateTime={post.date} className="mt-5 block font-pixel text-xl leading-none text-muted">
+        {formatDate(new Date(post.date))}
+      </time>
+      <div className="prose mt-12" dangerouslySetInnerHTML={{ __html: post.html }} />
+      <div className="mt-16">
         <ReactionBar slug={post.slug} reactions={reactions} signedIn={viewer !== null} />
       </div>
-      <div className="mt-16">
+      <div className="mt-20">
         <CommentsSection
           slug={post.slug}
           comments={comments}
@@ -55,7 +55,7 @@ function PostPage() {
           signInError={error}
         />
       </div>
-      <div className="mt-16">
+      <div className="mt-20">
         <SubscribeForm />
       </div>
     </article>
