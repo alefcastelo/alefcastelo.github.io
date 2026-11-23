@@ -1,6 +1,6 @@
-import { createFileRoute, notFound } from '@tanstack/react-router'
+import { Link, createFileRoute, notFound } from '@tanstack/react-router'
+import { AUTHOR_BIO } from '#/author'
 import { CommentsSection } from '#/comments/CommentsSection'
-import { formatDate } from '#/format-date'
 import { SubscribeForm } from '#/newsletter/SubscribeForm'
 import { ReactionBar } from '#/reactions/ReactionBar'
 import { listComments } from '#/server/comments'
@@ -40,9 +40,18 @@ function PostPage() {
         {post.title}
       </h1>
       <time dateTime={post.date} className="mt-5 block font-pixel text-xl leading-none text-muted">
-        {formatDate(new Date(post.date))}
+        {post.date}
       </time>
       <div className="prose mt-12" dangerouslySetInnerHTML={{ __html: post.html }} />
+      <aside aria-label="About the author" className="mt-16 flex items-start gap-5">
+        <img src="/me.jpg" alt="" width={64} height={64} className="size-16 shrink-0 object-cover" />
+        <div>
+          <Link to="/" className="font-pixel text-[28px] leading-none text-ivory uppercase hover:text-amber">
+            Alef Castelo
+          </Link>
+          <p className="mt-2 leading-relaxed text-muted">{AUTHOR_BIO}</p>
+        </div>
+      </aside>
       <div className="mt-16">
         <ReactionBar slug={post.slug} reactions={reactions} signedIn={viewer !== null} />
       </div>

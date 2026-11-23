@@ -1,0 +1,291 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-23T05:06:24+00:00",
+  "title": "Design System: Alef Castelo",
+  "extensions": {
+    "colorMeta": {
+      "void": {
+        "role": "neutral",
+        "displayName": "Emissive Void",
+        "canonical": "#050505",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#a5a5a5",
+          "#c9c9c9",
+          "#eeeeee"
+        ]
+      },
+      "well": {
+        "role": "neutral",
+        "displayName": "Well",
+        "canonical": "#0e0e0d",
+        "tonalRamp": [
+          "#0b0b0b",
+          "#252524",
+          "#424241",
+          "#616160",
+          "#828281",
+          "#a5a5a4",
+          "#c9c9c8",
+          "#eeeeed"
+        ]
+      },
+      "ash": {
+        "role": "neutral",
+        "displayName": "Ash Dust",
+        "canonical": "#3a3833",
+        "tonalRamp": [
+          "#0c0b09",
+          "#262522",
+          "#44423d",
+          "#63615c",
+          "#84827c",
+          "#a7a59f",
+          "#cbc9c3",
+          "#f0eeea"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Dim Dust",
+        "canonical": "#8f897c",
+        "tonalRamp": [
+          "#0d0b07",
+          "#28251d",
+          "#474136",
+          "#666154",
+          "#888275",
+          "#aba497",
+          "#cfc9bb",
+          "#f2eee4"
+        ]
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "Paper Dust",
+        "canonical": "#d6d0c2",
+        "tonalRamp": [
+          "#0d0b08",
+          "#28251d",
+          "#464236",
+          "#666154",
+          "#878275",
+          "#aaa597",
+          "#cec9bb",
+          "#f2eee5"
+        ]
+      },
+      "ivory": {
+        "role": "neutral",
+        "displayName": "Ivory",
+        "canonical": "#efe8d8",
+        "tonalRamp": [
+          "#0d0b07",
+          "#28251c",
+          "#474134",
+          "#676153",
+          "#888273",
+          "#aba495",
+          "#cfc9b9",
+          "#f3eee3"
+        ]
+      },
+      "amber": {
+        "role": "primary",
+        "displayName": "Signal Amber",
+        "canonical": "#ffb000",
+        "tonalRamp": [
+          "#1a0500",
+          "#441500",
+          "#712a00",
+          "#954d00",
+          "#ba6f00",
+          "#e09300",
+          "#ffb82a",
+          "#ffe595"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Home masthead only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Post title."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Index entry title; 36px mobile, 44px desktop."
+      },
+      "section": {
+        "displayName": "Section",
+        "purpose": "Comments and newsletter headings; prose h2/h3 in the same face."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Header links, dates, commands, counts, counter; 20-28px."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "The reading column."
+      },
+      "body-small": {
+        "displayName": "Body Small",
+        "purpose": "Comment metadata, quiet actions, status and alerts."
+      },
+      "code": {
+        "displayName": "Code",
+        "purpose": "Code blocks and inline code only."
+      }
+    },
+    "shadows": [
+      {
+        "name": "popover-lift",
+        "value": "0 12px 32px rgb(0 0 0 / 0.7)",
+        "purpose": "Only on a menu overlaying content (the account menu)."
+      }
+    ],
+    "motion": [
+      {
+        "name": "caret-blink",
+        "value": "1.06s steps(1) infinite",
+        "purpose": "The block caret's on/off blink; the only motion in the system, disabled under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Command",
+      "kind": "button",
+      "refersTo": "command",
+      "description": "Primary action: a bitmap label on the well that lights amber when it can act.",
+      "html": "<button class=\"ds-command\">Comment</button> <button class=\"ds-command\" disabled>Comment</button>",
+      "css": ".ds-command{font-family:'VT323', ui-monospace, monospace;font-size:1.375rem;line-height:1;padding:0.45rem 0.9rem;background:#0e0e0d;color:#efe8d8;border:0;border-radius:0;cursor:pointer}.ds-command:not(:disabled):hover{color:#ffb000}.ds-command:focus-visible{outline:2px solid #ffb000;outline-offset:3px}.ds-command:disabled{color:#8f897c;cursor:default}"
+    },
+    {
+      "name": "Quiet Action",
+      "kind": "button",
+      "refersTo": "quiet",
+      "description": "Secondary action: dim underlined sans that brightens.",
+      "html": "<button class=\"ds-quiet\">Reply</button>",
+      "css": ".ds-quiet{font-family:'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;font-size:0.875rem;background:none;border:0;padding:0;color:#8f897c;text-decoration:underline;text-underline-offset:4px;cursor:pointer}.ds-quiet:hover{color:#efe8d8}.ds-quiet:focus-visible{outline:2px solid #ffb000;outline-offset:3px}"
+    },
+    {
+      "name": "Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Comment textarea: ivory on the well, square, no border.",
+      "html": "<textarea class=\"ds-field\" rows=\"3\" placeholder=\"Write a comment\"></textarea>",
+      "css": ".ds-field{width:100%;font-family:'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;font-size:1rem;background:#0e0e0d;color:#efe8d8;padding:0.6rem 0.75rem;border:0;border-radius:0;caret-color:#ffb000}.ds-field::placeholder{color:#8f897c}.ds-field:focus-visible{outline:2px solid #ffb000;outline-offset:3px}"
+    },
+    {
+      "name": "Prompt Line",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Newsletter input: a bitmap prompt line whose block lights amber on focus.",
+      "html": "<form class=\"ds-prompt\"><span class=\"ds-prompt-block\"></span><input type=\"email\" placeholder=\"you@example.com\" aria-label=\"Email\"><button type=\"button\"><span>&gt;</span>Subscribe</button></form>",
+      "css": ".ds-prompt{display:flex;align-items:center;gap:12px;font-family:'VT323', ui-monospace, monospace;font-size:1.5rem;line-height:1}.ds-prompt-block{width:0.5em;height:0.8em;flex-shrink:0;background:#3a3833}.ds-prompt:focus-within .ds-prompt-block{background:#ffb000}.ds-prompt input{flex:1;min-width:0;font:inherit;background:transparent;border:0;padding:8px 0;color:#efe8d8;outline:none}.ds-prompt input::placeholder{color:#8f897c}.ds-prompt button{font:inherit;background:none;border:0;padding:8px 0;color:#efe8d8;cursor:pointer}.ds-prompt button span{color:#ffb000;margin-right:8px}.ds-prompt button:hover{color:#ffb000}.ds-prompt button:focus-visible{outline:2px solid #ffb000;outline-offset:3px}"
+    },
+    {
+      "name": "Header Navigation",
+      "kind": "nav",
+      "refersTo": "label",
+      "description": "Lowercase bitmap links, muted, amber under the pointer.",
+      "html": "<nav class=\"ds-nav\"><a href=\"#\" class=\"ds-nav-home\">Alef Castelo</a><ul><li><a href=\"#\">github</a></li><li><a href=\"#\">linkedin</a></li><li><a href=\"#\">bidirekt</a></li></ul></nav>",
+      "css": ".ds-nav{display:flex;justify-content:space-between;align-items:center;gap:24px;font-family:'VT323', ui-monospace, monospace;line-height:1}.ds-nav a{text-decoration:none}.ds-nav-home{font-size:28px;letter-spacing:0.08em;text-transform:uppercase;color:#efe8d8}.ds-nav ul{display:flex;gap:24px;list-style:none;margin:0;padding:0;font-size:22px}.ds-nav ul a{color:#8f897c}.ds-nav a:hover{color:#ffb000}.ds-nav a:focus-visible{outline:2px solid #ffb000;outline-offset:3px}"
+    },
+    {
+      "name": "Reaction",
+      "kind": "chip",
+      "refersTo": "reaction",
+      "description": "Emoji plus bitmap count; the reader's own reaction sits on the well in amber.",
+      "html": "<div class=\"ds-reactions\"><button class=\"ds-reaction\" aria-pressed=\"true\"><span>👍</span>3</button><button class=\"ds-reaction\" aria-pressed=\"false\"><span>🎉</span>1</button></div>",
+      "css": ".ds-reactions{display:flex;gap:4px}.ds-reaction{display:flex;align-items:center;gap:8px;padding:6px 12px;font-family:'VT323', ui-monospace, monospace;font-size:1.5rem;line-height:1;background:transparent;color:#8f897c;border:0;border-radius:0;cursor:pointer}.ds-reaction span{font-family:'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif}.ds-reaction:hover{background:#0e0e0d}.ds-reaction[aria-pressed=true]{background:#0e0e0d;color:#ffb000}.ds-reaction:focus-visible{outline:2px solid #ffb000;outline-offset:3px}"
+    },
+    {
+      "name": "Index Entry",
+      "kind": "custom",
+      "refersTo": "index-entry",
+      "description": "Numbered bitmap post line with the blinking amber caret in its gutter.",
+      "html": "<a href=\"#\" class=\"ds-entry\"><span class=\"ds-caret\"></span><div><h2><span class=\"ds-entry-meta\">#001 2026-11-20</span>BDD can make your code review 6x faster</h2><p>AI made writing code cheap; review is now the bottleneck.</p></div></a>",
+      "css": ".ds-entry{display:grid;grid-template-columns:1.75rem 1fr;column-gap:16px;text-decoration:none}.ds-caret{display:inline-block;width:0.5em;height:0.8em;margin-top:0.15em;font-size:44px;background:#ffb000;animation:ds-blink 1.06s steps(1) infinite}@keyframes ds-blink{50%{opacity:0}}@media (prefers-reduced-motion:reduce){.ds-caret{animation:none}}.ds-entry h2{margin:0;font-family:'VT323', ui-monospace, monospace;font-weight:400;font-size:44px;line-height:0.95;color:#efe8d8}.ds-entry:hover h2{color:#ffb000}.ds-entry-meta{margin-right:16px;font-size:26px;color:#8f897c}.ds-entry p{margin:12px 0 0;max-width:64ch;font-family:'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;line-height:1.625;color:#8f897c}.ds-entry:focus-visible{outline:2px solid #ffb000;outline-offset:3px}"
+    },
+    {
+      "name": "Alert",
+      "kind": "custom",
+      "refersTo": "body-small",
+      "description": "A failure as a reversed ERR glyph cell, never a red line.",
+      "html": "<p class=\"ds-alert\" role=\"alert\">Couldn't save the comment, try again</p>",
+      "css": ".ds-alert{font-family:'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;font-size:0.875rem;color:#efe8d8}.ds-alert::before{content:'ERR';margin-right:0.6em;padding:0 0.3em;background:#efe8d8;color:#050505;font-family:'VT323', ui-monospace, monospace;font-size:1.15em;line-height:1}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Cracktro Void",
+    "overview": "The blog is a demoscene title screen that holds still to be read: bright bitmap type over an emissive black void, with rank carried by brightness and never by boxes. A static field of grey dust pinpricks sits behind everything at two densities, in tile sizes chosen so no grid shows. The only thing that moves is a blinking amber block caret.\n\nTwo voices share the screen. VT323, a bitmap face, speaks for the frame: the masthead, titles, numbering, dates, labels, commands and counters. Hanken Grotesk carries everything meant to be read at length, in a calm column. JetBrains Mono appears only inside code. The scene does not translate into the reading column: no scrolling, drifting layers or palette cycling there.\n\nDensity is low. Wide vertical gaps separate the parts, and the reading column stops at 680px inside a 1120px frame. Nothing has a rule, a border or a rounded corner. A part is separated from the next by space, or set on a slightly lifted well.",
+    "keyCharacteristics": [
+      "Emissive black ground with a static, irregular dust field fixed behind the frame.",
+      "One signal color, amber, reserved for the caret, the item under the pointer, focus and selection.",
+      "Bitmap face for the frame, calm sans for reading, mono for code.",
+      "Square everything: zero radius, zero borders.",
+      "One motion: a stepped caret blink that stops under reduced motion."
+    ],
+    "rules": [
+      {
+        "name": "The Brightness Is Rank Rule",
+        "body": "Hierarchy is carried by stepping a line up the neutral ramp (muted, then text, then ivory) before reaching for size or a container.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Signal Rule",
+        "body": "Amber marks something live: the caret, focus, the pointed-at item or the reader's own state. If it isn't live, it isn't amber.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ash Is Not Ink Rule",
+        "body": "Ash never carries text that has to be read. Only aria-hidden ornaments and scrollbar chrome use it.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Voices Rule",
+        "body": "VT323 frames the page and Hanken Grotesk is read. A paragraph is never set in the bitmap face, and a title or label is never set in the sans.",
+        "section": "typography"
+      },
+      {
+        "name": "The Single Weight Bitmap Rule",
+        "body": "VT323 is used only at 400. Emphasis in the frame comes from size, case and brightness.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tone Not Shadow Rule",
+        "body": "A surface is raised by sitting on the well. Shadows are reserved for an overlay that floats above other content.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** separate parts with space and brightness steps: 48px between index entries, and 64–96px between post sections.",
+      "**Do** put a raised control on the well (`#0e0e0d`) instead of drawing a box around it.",
+      "**Do** reserve amber for the caret, focus, selection, hover and the reader's own state.",
+      "**Do** stop the caret blink under `prefers-reduced-motion: reduce`.",
+      "**Do** keep reading text in Hanken Grotesk at 1.125rem / 1.75 inside a 680px column."
+    ],
+    "donts": [
+      "**Don't** add borders, rules or rounded corners. The only line-like mark is the dotted break in prose.",
+      "**Don't** introduce a second accent or a red error color. Failures use the reversed ERR cell.",
+      "**Don't** animate anything other than the caret, and don't make the dust field drift.",
+      "**Don't** set ash (`#3a3833`) on text that must be read.",
+      "**Don't** set paragraphs in VT323 or use it above weight 400."
+    ]
+  }
+}

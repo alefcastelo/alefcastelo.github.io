@@ -22,7 +22,7 @@ Writing from a practitioner who measures: posts argue from his own experience an
 
 ## Operating Context
 
-- Posts are Markdown files in `content/posts/`, written in English, with title, description, date and an optional thumbnail.
+- Posts are Markdown files in `content/posts/`, written in English, with title, description and date.
 - Topics: AI and engineering process, backend and architecture, building Bidirekt, and anything else he finds interesting.
 - Readers can sign in with GitHub or Google to comment and react, and subscribe to a newsletter that only collects e-mails.
 
@@ -40,7 +40,7 @@ Writing from a practitioner who measures: posts argue from his own experience an
 
 ## Evidence on Hand
 
-- One published post: `content/posts/bdd-can-make-your-code-review-6x-faster.md`, with an SVG cover.
+- One published post: `content/posts/bdd-can-make-your-code-review-6x-faster.md`.
 - No testimonials, talks, press or employer logos exist; do not fabricate them.
 
 ## Product Principles

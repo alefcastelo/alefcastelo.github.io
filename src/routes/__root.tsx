@@ -44,13 +44,13 @@ function RootShell({ children }: { children: ReactNode }) {
             ) : (
               <Link
                 to="/"
-                className="font-pixel text-[28px] leading-none tracking-[0.08em] text-ivory uppercase hover:text-amber"
+                className="font-pixel text-[22px] leading-none tracking-[0.08em] whitespace-nowrap text-ivory uppercase hover:text-amber sm:text-[28px]"
               >
                 Alef Castelo
               </Link>
             )}
-            <div className="flex items-center gap-5 sm:gap-7">
-              <ul className="flex gap-4 font-pixel text-[22px] leading-none sm:gap-6">
+            <div className="flex items-center gap-4 sm:gap-7">
+              <ul className="flex gap-3 font-pixel text-[20px] leading-none sm:gap-6 sm:text-[22px]">
                 {LINKS.map((link) => (
                   <li key={link.href}>
                     <a
