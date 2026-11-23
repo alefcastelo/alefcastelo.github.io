@@ -1,5 +1,5 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { formatDate } from '#/format-date'
+import { AUTHOR_BIO } from '#/author'
 import { SubscribeForm } from '#/newsletter/SubscribeForm'
 import { fetchPosts } from '#/server/posts'
 
@@ -12,37 +12,34 @@ function Home() {
   const posts = Route.useLoaderData()
   return (
     <main>
-      <ul className="divide-y divide-muted/25 [&>li]:py-8 [&>li:first-child]:pt-0">
-        {posts.map((post) => (
+      <h1 className="font-pixel text-[clamp(56px,11vw,136px)] leading-[0.85] tracking-[0.04em] text-ivory uppercase">
+        Alef Castelo
+      </h1>
+      <p className="mt-6 max-w-[58ch] text-lg leading-relaxed text-pretty text-text">{AUTHOR_BIO}</p>
+      <ul className="index mt-20 flex flex-col gap-12 sm:mt-28">
+        {posts.map((post, index) => (
           <li key={post.slug}>
             <Link
               to="/posts/$slug"
               params={{ slug: post.slug }}
-              className="group flex items-start gap-5 sm:gap-8"
+              className="group grid grid-cols-[1.25rem_1fr] gap-x-3 sm:grid-cols-[1.75rem_1fr] sm:gap-x-4"
             >
-              <div className="min-w-0 flex-1">
-                <time dateTime={post.date} className="text-sm text-muted">
-                  {formatDate(new Date(post.date))}
-                </time>
-                <h2 className="mt-1 text-xl font-semibold tracking-tight text-balance group-hover:underline group-hover:underline-offset-4">
+              <span aria-hidden="true" className="caret mt-[0.15em] text-[36px] sm:text-[44px]" />
+              <div className="min-w-0">
+                <h2 className="font-pixel text-[36px] leading-[0.95] text-balance text-ivory group-hover:text-amber sm:text-[44px]">
+                  <span className="mr-4 text-[22px] text-muted sm:text-[26px]">
+                    #{String(posts.length - index).padStart(3, '0')}{' '}
+                    <time dateTime={post.date}>{post.date}</time>
+                  </span>
                   {post.title}
                 </h2>
-                <p className="mt-2 text-muted">{post.description}</p>
+                <p className="mt-3 max-w-[64ch] leading-relaxed text-muted">{post.description}</p>
               </div>
-              {post.thumbnail && (
-                <img
-                  src={post.thumbnail}
-                  alt=""
-                  width={160}
-                  height={107}
-                  className="mt-1 aspect-[3/2] w-24 shrink-0 rounded-sm object-cover sm:w-40"
-                />
-              )}
             </Link>
           </li>
         ))}
       </ul>
-      <footer className="mt-12">
+      <footer className="mt-24 max-w-[680px]">
         <SubscribeForm />
       </footer>
     </main>

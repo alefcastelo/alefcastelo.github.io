@@ -1,33 +1,115 @@
 @import 'tailwindcss';
 
-@theme {
-  --color-text: #1c1c1e;
-  --color-muted: #6b6b70;
-  --color-bg: #fbfbf9;
-  --font-sans: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-serif: Charter, 'Bitstream Charter', 'Iowan Old Style', Georgia, serif;
+@font-face {
+  font-family: 'VT323';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/vt323-400-latin.woff2') format('woff2');
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-text: #e8e8e6;
-    --color-muted: #9a9a9f;
-    --color-bg: #151516;
-  }
+@font-face {
+  font-family: 'Hanken Grotesk';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/hanken-grotesk-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Hanken Grotesk';
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/hanken-grotesk-italic-latin.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/jetbrains-mono-400-latin.woff2') format('woff2');
+}
+
+/* An emissive black void, four dust neutrals from ash to ivory, and one signal amber. */
+@theme {
+  --color-void: #050505;
+  --color-well: #0e0e0d;
+  --color-ivory: #efe8d8;
+  --color-text: #d6d0c2;
+  --color-muted: #8f897c;
+  --color-ash: #3a3833;
+  --color-amber: #ffb000;
+  --color-bg: var(--color-void);
+  --font-sans: 'Hanken Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+  --font-pixel: 'VT323', ui-monospace, monospace;
+}
+
+:root {
+  color-scheme: dark;
+  scrollbar-color: var(--color-ash) var(--color-void);
 }
 
 body {
-  background: var(--color-bg);
+  background-color: var(--color-void);
+  /* Still dust at two densities, in tiles of unrelated sizes so no grid shows. */
+  background-image:
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='1187' height='1187'><circle cx='1146' cy='953' r='1.3' fill='%232f2d29'/><circle cx='1040' cy='388' r='1.3' fill='%232f2d29'/><circle cx='1048' cy='974' r='1.1' fill='%233a3833'/><circle cx='381' cy='192' r='1.6' fill='%2324231f'/><circle cx='621' cy='290' r='1.3' fill='%232f2d29'/><circle cx='1103' cy='85' r='1.1' fill='%233a3833'/><circle cx='811' cy='927' r='1.6' fill='%2324231f'/><circle cx='322' cy='30' r='1.6' fill='%2324231f'/><circle cx='129' cy='121' r='1.6' fill='%2324231f'/><circle cx='389' cy='495' r='1.1' fill='%233a3833'/><circle cx='61' cy='950' r='1.6' fill='%2324231f'/><circle cx='902' cy='400' r='1.3' fill='%232f2d29'/><circle cx='478' cy='602' r='1.6' fill='%2324231f'/><circle cx='9' cy='174' r='1.3' fill='%232f2d29'/><circle cx='569' cy='833' r='1.3' fill='%232f2d29'/><circle cx='170' cy='520' r='1.6' fill='%2324231f'/><circle cx='470' cy='1050' r='1.3' fill='%232f2d29'/><circle cx='60' cy='143' r='1.3' fill='%232f2d29'/><circle cx='221' cy='820' r='1.6' fill='%2324231f'/><circle cx='595' cy='791' r='1.1' fill='%233a3833'/><circle cx='34' cy='1' r='1.1' fill='%233a3833'/><circle cx='429' cy='107' r='1.1' fill='%233a3833'/><circle cx='768' cy='813' r='1.3' fill='%232f2d29'/><circle cx='149' cy='1159' r='1.3' fill='%232f2d29'/><circle cx='406' cy='552' r='1.6' fill='%2324231f'/><circle cx='178' cy='637' r='1.3' fill='%232f2d29'/><circle cx='31' cy='839' r='1.3' fill='%232f2d29'/><circle cx='275' cy='504' r='1.1' fill='%233a3833'/><circle cx='206' cy='22' r='1.6' fill='%2324231f'/><circle cx='952' cy='997' r='1.1' fill='%233a3833'/><circle cx='1145' cy='385' r='1.1' fill='%233a3833'/><circle cx='1042' cy='390' r='1.3' fill='%232f2d29'/><circle cx='268' cy='858' r='1.6' fill='%2324231f'/><circle cx='785' cy='238' r='1.6' fill='%2324231f'/><circle cx='861' cy='435' r='1.3' fill='%232f2d29'/><circle cx='552' cy='622' r='1.1' fill='%233a3833'/><circle cx='431' cy='383' r='1.1' fill='%233a3833'/><circle cx='1181' cy='205' r='1.3' fill='%232f2d29'/><circle cx='299' cy='436' r='1.1' fill='%233a3833'/><circle cx='528' cy='19' r='1.3' fill='%232f2d29'/></svg>"),
+    url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='733' height='733'><circle cx='154' cy='404' r='0.6' fill='%2322211f'/><circle cx='49' cy='74' r='0.8' fill='%232f2e2a'/><circle cx='96' cy='374' r='0.8' fill='%232f2e2a'/><circle cx='59' cy='519' r='0.8' fill='%232f2e2a'/><circle cx='38' cy='88' r='0.6' fill='%232a2926'/><circle cx='428' cy='71' r='0.6' fill='%2322211f'/><circle cx='92' cy='564' r='0.6' fill='%232a2926'/><circle cx='60' cy='579' r='0.6' fill='%2322211f'/><circle cx='228' cy='645' r='0.6' fill='%232a2926'/><circle cx='596' cy='63' r='0.8' fill='%232f2e2a'/><circle cx='599' cy='406' r='0.8' fill='%232f2e2a'/><circle cx='226' cy='47' r='0.6' fill='%232a2926'/><circle cx='136' cy='296' r='0.8' fill='%232f2e2a'/><circle cx='147' cy='553' r='0.6' fill='%2322211f'/><circle cx='584' cy='315' r='0.6' fill='%232a2926'/><circle cx='698' cy='185' r='0.8' fill='%232f2e2a'/><circle cx='595' cy='584' r='0.6' fill='%232a2926'/><circle cx='192' cy='381' r='0.8' fill='%232f2e2a'/><circle cx='560' cy='729' r='0.6' fill='%232a2926'/><circle cx='577' cy='61' r='0.6' fill='%232a2926'/><circle cx='210' cy='508' r='0.8' fill='%232f2e2a'/><circle cx='544' cy='437' r='0.8' fill='%232f2e2a'/><circle cx='476' cy='599' r='0.6' fill='%2322211f'/><circle cx='370' cy='306' r='0.6' fill='%2322211f'/><circle cx='184' cy='715' r='0.6' fill='%232a2926'/><circle cx='83' cy='588' r='0.6' fill='%232a2926'/><circle cx='537' cy='506' r='0.6' fill='%2322211f'/><circle cx='459' cy='294' r='0.6' fill='%2322211f'/><circle cx='74' cy='120' r='0.8' fill='%232f2e2a'/><circle cx='428' cy='168' r='0.8' fill='%232f2e2a'/><circle cx='155' cy='500' r='0.6' fill='%2322211f'/><circle cx='40' cy='684' r='0.6' fill='%2322211f'/><circle cx='571' cy='586' r='0.6' fill='%232a2926'/><circle cx='348' cy='711' r='0.6' fill='%2322211f'/><circle cx='608' cy='508' r='0.6' fill='%2322211f'/><circle cx='467' cy='70' r='0.8' fill='%232f2e2a'/><circle cx='276' cy='485' r='0.6' fill='%232a2926'/><circle cx='680' cy='66' r='0.8' fill='%232f2e2a'/><circle cx='718' cy='317' r='0.6' fill='%232a2926'/><circle cx='591' cy='697' r='0.8' fill='%232f2e2a'/><circle cx='291' cy='733' r='0.6' fill='%2322211f'/><circle cx='684' cy='355' r='0.6' fill='%2322211f'/><circle cx='472' cy='363' r='0.6' fill='%232a2926'/><circle cx='625' cy='119' r='0.6' fill='%232a2926'/><circle cx='60' cy='223' r='0.6' fill='%2322211f'/><circle cx='132' cy='253' r='0.6' fill='%2322211f'/><circle cx='400' cy='508' r='0.6' fill='%2322211f'/><circle cx='170' cy='459' r='0.6' fill='%232a2926'/><circle cx='562' cy='284' r='0.6' fill='%2322211f'/><circle cx='440' cy='563' r='0.6' fill='%232a2926'/><circle cx='723' cy='425' r='0.6' fill='%2322211f'/><circle cx='699' cy='389' r='0.6' fill='%2322211f'/><circle cx='154' cy='84' r='0.6' fill='%232a2926'/><circle cx='154' cy='237' r='0.6' fill='%232a2926'/><circle cx='238' cy='12' r='0.8' fill='%232f2e2a'/><circle cx='603' cy='186' r='0.6' fill='%2322211f'/><circle cx='288' cy='4' r='0.6' fill='%2322211f'/><circle cx='429' cy='547' r='0.6' fill='%232a2926'/><circle cx='624' cy='579' r='0.6' fill='%2322211f'/><circle cx='128' cy='707' r='0.6' fill='%2322211f'/><circle cx='632' cy='670' r='0.8' fill='%232f2e2a'/><circle cx='55' cy='467' r='0.8' fill='%232f2e2a'/><circle cx='572' cy='401' r='0.8' fill='%232f2e2a'/><circle cx='408' cy='403' r='0.6' fill='%2322211f'/><circle cx='493' cy='649' r='0.6' fill='%232a2926'/><circle cx='63' cy='195' r='0.6' fill='%2322211f'/><circle cx='213' cy='451' r='0.6' fill='%232a2926'/><circle cx='112' cy='348' r='0.6' fill='%232a2926'/><circle cx='53' cy='104' r='0.8' fill='%232f2e2a'/><circle cx='580' cy='154' r='0.6' fill='%232a2926'/><circle cx='103' cy='372' r='0.8' fill='%232f2e2a'/><circle cx='26' cy='72' r='0.8' fill='%232f2e2a'/><circle cx='628' cy='385' r='0.6' fill='%232a2926'/><circle cx='649' cy='258' r='0.6' fill='%232a2926'/><circle cx='616' cy='372' r='0.6' fill='%2322211f'/><circle cx='125' cy='118' r='0.6' fill='%2322211f'/><circle cx='477' cy='491' r='0.6' fill='%2322211f'/><circle cx='319' cy='87' r='0.6' fill='%2322211f'/><circle cx='104' cy='350' r='0.6' fill='%232a2926'/><circle cx='271' cy='490' r='0.8' fill='%232f2e2a'/><circle cx='165' cy='528' r='0.8' fill='%232f2e2a'/><circle cx='210' cy='540' r='0.6' fill='%232a2926'/><circle cx='150' cy='706' r='0.6' fill='%2322211f'/><circle cx='27' cy='540' r='0.8' fill='%232f2e2a'/><circle cx='658' cy='93' r='0.6' fill='%2322211f'/><circle cx='267' cy='530' r='0.8' fill='%232f2e2a'/><circle cx='171' cy='364' r='0.6' fill='%2322211f'/><circle cx='545' cy='554' r='0.6' fill='%232a2926'/><circle cx='337' cy='651' r='0.8' fill='%232f2e2a'/><circle cx='627' cy='199' r='0.6' fill='%232a2926'/><circle cx='410' cy='232' r='0.6' fill='%232a2926'/><circle cx='530' cy='504' r='0.6' fill='%232a2926'/><circle cx='29' cy='28' r='0.6' fill='%2322211f'/><circle cx='483' cy='265' r='0.6' fill='%2322211f'/><circle cx='709' cy='619' r='0.6' fill='%232a2926'/><circle cx='457' cy='357' r='0.6' fill='%2322211f'/><circle cx='82' cy='225' r='0.6' fill='%2322211f'/><circle cx='232' cy='481' r='0.6' fill='%232a2926'/><circle cx='345' cy='209' r='0.6' fill='%232a2926'/><circle cx='639' cy='624' r='0.6' fill='%2322211f'/><circle cx='490' cy='668' r='0.6' fill='%232a2926'/><circle cx='658' cy='86' r='0.6' fill='%2322211f'/><circle cx='122' cy='397' r='0.8' fill='%232f2e2a'/><circle cx='204' cy='489' r='0.8' fill='%232f2e2a'/><circle cx='444' cy='651' r='0.6' fill='%232a2926'/><circle cx='88' cy='405' r='0.6' fill='%2322211f'/><circle cx='411' cy='86' r='0.6' fill='%2322211f'/><circle cx='162' cy='174' r='0.8' fill='%232f2e2a'/><circle cx='28' cy='154' r='0.6' fill='%232a2926'/><circle cx='476' cy='671' r='0.8' fill='%232f2e2a'/><circle cx='626' cy='610' r='0.6' fill='%232a2926'/><circle cx='673' cy='358' r='0.6' fill='%2322211f'/><circle cx='561' cy='561' r='0.6' fill='%232a2926'/><circle cx='21' cy='14' r='0.6' fill='%232a2926'/><circle cx='665' cy='105' r='0.8' fill='%232f2e2a'/><circle cx='142' cy='444' r='0.8' fill='%232f2e2a'/><circle cx='216' cy='28' r='0.6' fill='%232a2926'/><circle cx='217' cy='299' r='0.6' fill='%2322211f'/><circle cx='246' cy='600' r='0.8' fill='%232f2e2a'/><circle cx='265' cy='557' r='0.6' fill='%2322211f'/><circle cx='134' cy='62' r='0.6' fill='%2322211f'/><circle cx='362' cy='469' r='0.8' fill='%232f2e2a'/><circle cx='597' cy='529' r='0.8' fill='%232f2e2a'/><circle cx='513' cy='133' r='0.6' fill='%2322211f'/><circle cx='155' cy='536' r='0.8' fill='%232f2e2a'/><circle cx='19' cy='450' r='0.8' fill='%232f2e2a'/><circle cx='623' cy='4' r='0.6' fill='%232a2926'/><circle cx='176' cy='144' r='0.6' fill='%232a2926'/><circle cx='633' cy='123' r='0.6' fill='%2322211f'/><circle cx='63' cy='333' r='0.8' fill='%232f2e2a'/><circle cx='530' cy='543' r='0.8' fill='%232f2e2a'/><circle cx='494' cy='108' r='0.8' fill='%232f2e2a'/><circle cx='58' cy='254' r='0.8' fill='%232f2e2a'/><circle cx='283' cy='43' r='0.6' fill='%232a2926'/><circle cx='519' cy='463' r='0.6' fill='%232a2926'/><circle cx='28' cy='64' r='0.8' fill='%232f2e2a'/><circle cx='333' cy='627' r='0.6' fill='%2322211f'/><circle cx='620' cy='524' r='0.8' fill='%232f2e2a'/><circle cx='709' cy='283' r='0.6' fill='%232a2926'/><circle cx='520' cy='546' r='0.6' fill='%2322211f'/><circle cx='519' cy='253' r='0.6' fill='%2322211f'/><circle cx='535' cy='265' r='0.8' fill='%232f2e2a'/><circle cx='207' cy='458' r='0.8' fill='%232f2e2a'/><circle cx='426' cy='124' r='0.6' fill='%232a2926'/><circle cx='452' cy='323' r='0.6' fill='%2322211f'/><circle cx='687' cy='246' r='0.6' fill='%232a2926'/><circle cx='74' cy='217' r='0.6' fill='%2322211f'/><circle cx='310' cy='125' r='0.8' fill='%232f2e2a'/><circle cx='733' cy='658' r='0.6' fill='%232a2926'/><circle cx='374' cy='146' r='0.8' fill='%232f2e2a'/></svg>");
+  background-attachment: fixed;
   color: var(--color-text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  caret-color: var(--color-amber);
+}
+
+::selection {
+  background: var(--color-amber);
+  color: var(--color-void);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-amber);
+  outline-offset: 3px;
 }
 
 @layer components {
+  /* The one moving thing on the page: a block caret beside the line it marks. */
+  .caret {
+    display: inline-block;
+    width: 0.5em;
+    height: 0.8em;
+    background: var(--color-amber);
+    animation: caret-blink 1.06s steps(1) infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .caret {
+      animation: none;
+    }
+  }
+
+  /* A failure is a reversed glyph cell, not a red line. */
+  .alert {
+    color: var(--color-ivory);
+  }
+
+  .alert::before {
+    content: 'ERR' / '';
+    margin-right: 0.6em;
+    padding: 0 0.3em;
+    background: var(--color-ivory);
+    color: var(--color-void);
+    font-family: var(--font-pixel);
+    font-size: 1.15em;
+    line-height: 1;
+  }
+
   .prose {
-    font-family: var(--font-serif);
-    font-size: 1.1875rem;
-    line-height: 1.7;
+    font-size: 1.125rem;
+    line-height: 1.75;
     overflow-wrap: break-word;
   }
 
@@ -35,17 +117,43 @@ body {
     margin-top: 1.25em;
   }
 
-  .prose h2 {
+  .prose h2,
+  .prose h3 {
     margin-top: 2em;
-    font-family: var(--font-sans);
-    font-size: 1.375rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
+    font-family: var(--font-pixel);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--color-ivory);
+  }
+
+  .prose h2 {
+    font-size: 2.125rem;
+  }
+
+  .prose h3 {
+    font-size: 1.625rem;
+  }
+
+  .prose h2 + *,
+  .prose h3 + * {
+    margin-top: 0.6em;
+  }
+
+  .prose ul,
+  .prose ol {
+    padding-left: 1.25em;
   }
 
   .prose ul {
-    list-style: disc;
-    padding-left: 1.25em;
+    list-style: square;
+  }
+
+  .prose ol {
+    list-style: decimal;
+  }
+
+  .prose li::marker {
+    color: var(--color-muted);
   }
 
   .prose li + li {
@@ -53,25 +161,136 @@ body {
   }
 
   .prose a {
+    color: var(--color-ivory);
     text-decoration: underline;
+    text-decoration-color: var(--color-muted);
     text-underline-offset: 3px;
+  }
+
+  .prose a:hover {
+    text-decoration-color: var(--color-amber);
   }
 
   .prose strong {
     font-weight: 600;
+    color: var(--color-ivory);
+  }
+
+  .prose blockquote {
+    padding-left: 1.25em;
+    color: var(--color-muted);
+    font-style: italic;
+  }
+
+  .prose hr {
+    border: 0;
+    height: 1em;
+    background: radial-gradient(var(--color-muted) 1px, transparent 1.5px) center / 1em 1em repeat-x;
   }
 
   .prose img {
     width: 100%;
     height: auto;
-    border-radius: 4px;
   }
 
   .prose code {
+    font-family: var(--font-mono);
     font-size: 0.85em;
+    color: var(--color-ivory);
+  }
+
+  .prose :not(pre) > code {
+    padding: 0.1em 0.3em;
+    background: var(--color-well);
   }
 
   .prose pre {
     overflow-x: auto;
+    padding: 1em 1.25em;
+    background: var(--color-well);
+    font-size: 0.95rem;
+    line-height: 1.6;
   }
+
+  .prose table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .prose th {
+    text-align: left;
+    font-weight: 600;
+    color: var(--color-ivory);
+  }
+
+  .prose th,
+  .prose td {
+    padding: 0.4em 1em 0.4em 0;
+  }
+
+  /* A text input as a prompt line over the void. */
+  .field {
+    width: 100%;
+    background: var(--color-well);
+    color: var(--color-ivory);
+    padding: 0.6rem 0.75rem;
+  }
+
+  .field::placeholder {
+    color: var(--color-muted);
+  }
+
+  /* A command, set in the bitmap face, that lights amber when it can act. */
+  .command {
+    font-family: var(--font-pixel);
+    font-size: 1.375rem;
+    line-height: 1;
+    padding: 0.45rem 0.9rem;
+    background: var(--color-well);
+    color: var(--color-ivory);
+  }
+
+  .command:not(:disabled):hover {
+    color: var(--color-amber);
+  }
+
+  .command:disabled {
+    color: var(--color-muted);
+  }
+
+  /* A secondary action: dim text that brightens. */
+  .quiet {
+    color: var(--color-muted);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .quiet:hover {
+    color: var(--color-ivory);
+  }
+}
+
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* The caret marks the newest post, and moves to the post the reader points at. */
+.index .caret {
+  visibility: hidden;
+}
+
+.index > li:first-child .caret {
+  visibility: visible;
+}
+
+.index:has(> li:hover, > li:focus-within) > li .caret {
+  visibility: hidden;
+}
+
+.index:has(> li:hover, > li:focus-within) > li:is(:hover, :focus-within) .caret {
+  visibility: visible;
 }

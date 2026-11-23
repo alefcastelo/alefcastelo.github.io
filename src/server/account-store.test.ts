@@ -3,8 +3,9 @@ import { listPosts } from '#/posts'
 import { deleteUserAccount } from '#/server/account-store'
 import { createPostComment, deletePostComment } from '#/server/comment-store'
 import type { Db } from '#/server/db/client'
-import { account, comments, session, user } from '#/server/db/schema'
+import { account, comments, reactions, session, user } from '#/server/db/schema'
 import { commentIdOf as idOf, createTestDbWithReaders as setup } from '#/server/db/test-db'
+import { togglePostReaction } from '#/server/reaction-store'
 import type { Viewer } from '#/server/viewer'
 
 const SLUG = listPosts()[0].slug
@@ -81,7 +82,7 @@ describe('deleteUserAccount', () => {
     expect(remaining(db, [ada, bob])).toEqual(['[deleted] by bob', '  bob reply by bob'])
   })
 
-  it('removes the user, their sessions and provider links in cascade, and nobody else', () => {
+  it('removes the user, their sessions, provider links and reactions in cascade, and nobody else', () => {
     const { db, reader } = setup()
     const ada = reader('ada')
     const bob = reader('bob')
@@ -104,11 +105,13 @@ describe('deleteUserAccount', () => {
           updatedAt: new Date(clock),
         })
         .run()
+      expect(togglePostReaction(db, owner, { slug: SLUG, emoji: '👍' })).toBe('on')
     }
 
     deleteUserAccount(db, ada.id)
     expect(db.select().from(user).all().map((row) => row.id)).toEqual([bob.id])
     expect(db.select().from(session).all().map((row) => row.userId)).toEqual([bob.id])
     expect(db.select().from(account).all().map((row) => row.userId)).toEqual([bob.id])
+    expect(db.select().from(reactions).all().map((row) => row.userId)).toEqual([bob.id])
   })
 })

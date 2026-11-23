@@ -33,22 +33,26 @@ export function SubscribeForm() {
   }
 
   return (
-    <section className="border-t border-muted/25 pt-8">
-      <h2 className="font-semibold tracking-tight">Get new posts by email</h2>
-      <form noValidate onSubmit={onSubmit} className="mt-3 flex flex-wrap gap-2">
+    <section>
+      <h2 className="font-pixel text-[32px] leading-none text-ivory">Get new posts by email</h2>
+      <form noValidate onSubmit={onSubmit} className="group mt-5 flex items-center gap-3 font-pixel text-2xl leading-none">
+        <span aria-hidden="true" className="h-[0.8em] w-[0.5em] shrink-0 bg-ash group-focus-within:bg-amber" />
         <input
           type="email"
           name="email"
           aria-label="Email"
           placeholder="you@example.com"
           autoComplete="email"
-          className="min-w-0 flex-1 rounded-sm border border-muted/40 bg-transparent px-3 py-2"
+          className="min-w-0 flex-1 bg-transparent py-2 text-ivory placeholder:text-muted focus:outline-none"
         />
         <button
           type="submit"
           disabled={!hydrated || pending}
-          className="rounded-sm bg-text px-4 py-2 font-medium text-bg disabled:opacity-60"
+          className="shrink-0 py-2 text-ivory hover:text-amber disabled:text-muted"
         >
+          <span aria-hidden="true" className="mr-2 text-amber">
+            &gt;
+          </span>
           Subscribe
         </button>
       </form>
