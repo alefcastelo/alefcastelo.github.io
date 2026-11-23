@@ -3,6 +3,7 @@ import { getRequestHeader } from '@tanstack/react-start/server'
 import { config } from '#/server/config'
 import { db } from '#/server/db/client'
 import { createRateLimiter } from '#/server/rate-limit'
+import { text } from '#/server/request'
 import { clientIp, subscribeEmail } from '#/server/subscribe-email'
 
 const limiter = createRateLimiter({
@@ -11,9 +12,7 @@ const limiter = createRateLimiter({
 })
 
 export const subscribe = createServerFn({ method: 'POST' })
-  .validator((data: { email: string }) => ({
-    email: typeof data?.email === 'string' ? data.email : '',
-  }))
+  .validator((data: { email: string }) => ({ email: text(data?.email) }))
   .handler(({ data }) =>
     subscribeEmail(db, limiter, {
       email: data.email,

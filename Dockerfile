@@ -23,7 +23,9 @@ ENV DATABASE_PATH=/data/blog.db
 
 COPY package*.json ./
 
-RUN npm ci --omit=dev --ignore-scripts
+# better-auth's optional peers mark vitest and drizzle-kit as devOptional in the lockfile,
+# which --omit=dev still installs; deleting devDependencies first leaves them out.
+RUN npm pkg delete devDependencies && npm ci --omit=dev --ignore-scripts
 
 COPY --from=build /app/dist ./dist
 COPY drizzle ./drizzle
