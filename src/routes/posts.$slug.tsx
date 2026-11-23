@@ -1,5 +1,6 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
 import { formatDate } from '#/format-date'
+import { SubscribeForm } from '#/newsletter/SubscribeForm'
 import { fetchPost } from '#/server/posts'
 
 export const Route = createFileRoute('/posts/$slug')({
@@ -30,6 +31,9 @@ function PostPage() {
         {post.title}
       </h1>
       <div className="prose mt-10" dangerouslySetInnerHTML={{ __html: post.html }} />
+      <div className="mt-16">
+        <SubscribeForm />
+      </div>
     </article>
   )
 }

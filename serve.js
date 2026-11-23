@@ -1,8 +1,11 @@
 import { fileURLToPath } from 'node:url'
 import { serve } from 'srvx'
 import { staticMiddleware } from 'srvx/static'
-import handler from './dist/server/server.js'
+import { migrateDatabase } from './scripts/migrate.js'
 
+migrateDatabase()
+
+const { default: handler } = await import('./dist/server/server.js')
 const clientDir = fileURLToPath(new URL('./dist/client', import.meta.url))
 const hashedAssets = staticMiddleware({ dir: clientDir, maxAge: 31536000, immutable: true })
 const publicFiles = staticMiddleware({ dir: clientDir, maxAge: 600 })

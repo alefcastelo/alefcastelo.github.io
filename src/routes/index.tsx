@@ -1,5 +1,6 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { formatDate } from '#/format-date'
+import { SubscribeForm } from '#/newsletter/SubscribeForm'
 import { fetchPosts } from '#/server/posts'
 
 export const Route = createFileRoute('/')({
@@ -41,6 +42,9 @@ function Home() {
           </li>
         ))}
       </ul>
+      <footer className="mt-12">
+        <SubscribeForm />
+      </footer>
     </main>
   )
 }
