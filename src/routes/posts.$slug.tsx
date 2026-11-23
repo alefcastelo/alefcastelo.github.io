@@ -1,9 +1,10 @@
 import { createFileRoute, notFound } from '@tanstack/react-router'
-import { findPost, formatDate } from '#/posts'
+import { formatDate } from '#/format-date'
+import { fetchPost } from '#/server/posts'
 
 export const Route = createFileRoute('/posts/$slug')({
-  loader: ({ params }) => {
-    const post = findPost(params.slug)
+  loader: async ({ params }) => {
+    const post = await fetchPost({ data: params.slug })
     if (post === null) throw notFound()
     return post
   },
@@ -23,7 +24,7 @@ function PostPage() {
   return (
     <article>
       <time dateTime={post.date} className="text-sm text-muted">
-        {formatDate(post.date)}
+        {formatDate(new Date(post.date))}
       </time>
       <h1 className="mt-2 text-3xl leading-tight font-semibold tracking-tight text-balance sm:text-4xl">
         {post.title}

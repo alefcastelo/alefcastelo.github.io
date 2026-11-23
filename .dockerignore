@@ -1,0 +1,12 @@
+node_modules
+dist
+.tanstack
+.vite
+.vscode
+.DS_Store
+.output
+.nitro
+*.local
+.env
+data/
+.ai/

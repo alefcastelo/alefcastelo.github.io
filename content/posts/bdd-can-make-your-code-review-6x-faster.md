@@ -2,6 +2,7 @@
 title: BDD can make your code review 6x faster
 description: AI made writing code cheap; review is now the bottleneck. Here is how BDD cut my team's review time from 21.8h to 3.6h per MR.
 date: 2026-11-20
+thumbnail: /images/bdd-can-make-your-code-review-6x-faster/cover.svg
 ---
 
 I have a hypothesis: BDD can speed up code review.
