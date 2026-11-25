@@ -2,10 +2,12 @@ import { defineConfig } from 'vite'
 import tailwindcss from '@tailwindcss/vite'
 import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import viteReact from '@vitejs/plugin-react'
+import { githubContributions } from './src/github/contributions-plugin'
 
 export default defineConfig({
   plugins: [
     tailwindcss(),
+    githubContributions(),
     tanstackStart({
       prerender: { enabled: true, crawlLinks: true },
       pages: [{ path: '/404', prerender: { outputPath: '/404.html' } }],

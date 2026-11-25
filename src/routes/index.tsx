@@ -1,5 +1,6 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { AUTHOR_BIO } from '#/author'
+import { ContributionGraph } from '#/github/ContributionGraph'
 import { listPosts } from '#/posts'
 
 export const Route = createFileRoute('/')({
@@ -15,6 +16,9 @@ function Home() {
         Alef Castelo
       </h1>
       <p className="mt-6 max-w-[58ch] text-lg leading-relaxed text-pretty text-text">{AUTHOR_BIO}</p>
+      <div className="mt-14">
+        <ContributionGraph />
+      </div>
       <ul className="index mt-20 flex flex-col gap-12 sm:mt-28">
         {posts.map((post, index) => (
           <li key={post.slug}>
