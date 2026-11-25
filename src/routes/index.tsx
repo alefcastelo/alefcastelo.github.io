@@ -1,10 +1,9 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { AUTHOR_BIO } from '#/author'
-import { SubscribeForm } from '#/newsletter/SubscribeForm'
-import { fetchPosts } from '#/server/posts'
+import { listPosts } from '#/posts'
 
 export const Route = createFileRoute('/')({
-  loader: () => fetchPosts(),
+  loader: () => listPosts(),
   component: Home,
 })
 
@@ -39,9 +38,6 @@ function Home() {
           </li>
         ))}
       </ul>
-      <footer className="mt-24 max-w-[680px]">
-        <SubscribeForm />
-      </footer>
     </main>
   )
 }

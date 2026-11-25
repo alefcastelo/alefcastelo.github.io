@@ -6,8 +6,3 @@ dist
 .vite
 *.log
 .DS_Store
-.env
-data/
-*.db
-test-results/
-playwright-report/

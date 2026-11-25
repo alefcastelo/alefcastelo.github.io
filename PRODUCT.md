@@ -14,7 +14,7 @@ web
 
 ## Product Purpose
 
-alefcastelo.com is the personal blog of Alef Castelo, a software engineer in Mexico City with over a decade of backend work. He writes about whatever he finds interesting, to build authority online. Success means readers finish posts, come back, subscribe to the newsletter, and leave with a clear picture of who Alef is and what he builds.
+alefcastelo.com is the personal blog of Alef Castelo, a software engineer in Mexico City with over a decade of backend work. He writes about whatever he finds interesting, to build authority online. Success means readers finish posts, come back, and leave with a clear picture of who Alef is and what he builds.
 
 ## Positioning
 
@@ -24,11 +24,11 @@ Writing from a practitioner who measures: posts argue from his own experience an
 
 - Posts are Markdown files in `content/posts/`, written in English, with title, description and date.
 - Topics: AI and engineering process, backend and architecture, building Bidirekt, and anything else he finds interesting.
-- Readers can sign in with GitHub or Google to comment and react, and subscribe to a newsletter that only collects e-mails.
+- Comments, reactions, sign-in and a newsletter are planned for later; the site ships without them.
 
 ## Capabilities and Constraints
 
-- TanStack Start server-rendered on a Hostinger VPS (Dokploy), SQLite storage.
+- TanStack Start prerendered to static HTML, deployed to GitHub Pages when a release tag is pushed.
 - Images are served from `public/images/<post-slug>/`.
 - Bidirekt gets links from the blog and possibly a dedicated page (undecided), plus posts about it.
 
