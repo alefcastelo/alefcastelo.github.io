@@ -3,6 +3,9 @@ name: Deploy
 on:
   push:
     tags: ['v*']
+  # Rebuilds the latest release daily so the GitHub contributions graph stays current.
+  schedule:
+    - cron: '0 6 * * *'
 
 permissions:
   contents: read
@@ -21,6 +24,10 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - if: github.event_name == 'schedule'
+        run: git checkout "$(git describe --tags --abbrev=0 --match 'v*' origin/master)"
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
